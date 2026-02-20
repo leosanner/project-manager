@@ -8,13 +8,6 @@ dotenvExpand.expand(dotenv.config());
 
 function buildDatabaseUrl() {
   if (process.env.DATABASE_URL) {
-    console.log("");
-    console.log("");
-    console.log("");
-    console.log("");
-    console.log("⏳⏳⏳🔨🔨🔨🔨🔨");
-    console.log("");
-    console.log(process.env.DATABASE_URL);
     return process.env.DATABASE_URL;
   }
 
