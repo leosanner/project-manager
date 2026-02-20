@@ -4,9 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "migrations:dev && next dev",
     "test": "jest",
+    "wait-for-db": "node infra/scripts/wait-for-db.js",
     "build": "next build",
+    "db:up": "docker compose down -v && docker compose up -d && npm run wait-for-db",
+    "migrations:dev": "npm run db:up && npx prisma migrate dev",
+    "migrations:prod": "npx prisma migrate deploy",
     "start": "next start",
     "lint": "eslint"
   },
