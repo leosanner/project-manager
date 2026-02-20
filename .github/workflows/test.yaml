@@ -3,7 +3,7 @@ on: pull_request
 
 jobs:
   jest:
-    name: Jest
+    name: Jest + Prisma migrations
     runs-on: ubuntu-latest
     env:
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
@@ -18,5 +18,5 @@ jobs:
           node-version: "lts/krypton"
 
       - run: npm ci
-      - run: npm migrations:prod:pr
+      - run: npm run migrations:prod:pr
       - run: npm test
