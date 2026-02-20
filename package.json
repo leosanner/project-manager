@@ -10,7 +10,8 @@
     "build": "next build",
     "db:up": "docker compose down -v && docker compose up -d && npm run wait-for-db",
     "migrations:dev": "npm run db:up && npx prisma migrate dev",
-    "migrations:prod": "npx prisma migrate deploy",
+    "migrations:prod:pr": "npm run db:up && npx prisma validate && npx prisma migrate deploy",
+    "migrations:prod:push": "npx prisma migrate deploy",
     "start": "next start",
     "lint": "eslint"
   },
