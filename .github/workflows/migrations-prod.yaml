@@ -1,0 +1,23 @@
+name: Migrations on Merge to main
+
+on:
+  pull_request:
+    types: [closed]
+    branches: ["main"]
+
+jobs:
+  migrations:
+    if: github.event.pull_request.merged == true
+    name: Migrations Production
+    env:
+      DATABASE_URL: ${{ secrets.PROD_DB_URL }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "lts/krypton"
+
+      - run: npm ci
+      - run: npm run migrations:prod:push
