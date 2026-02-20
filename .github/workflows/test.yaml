@@ -1,0 +1,22 @@
+name: Tests + PR
+on: pull_request
+
+jobs:
+  jest:
+    name: Jest
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_PORT: 5432
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "lts/krypton"
+
+      - run: npm ci
+      - run: npm migrations:prod:pr
+      - run: npm test

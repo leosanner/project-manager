@@ -6,10 +6,28 @@ const dotenvExpand = require("dotenv-expand");
 
 dotenvExpand.expand(dotenv.config());
 
-function getDatabaseUrl() {
-  const dbUrl = process.env.DATABASE_URL;
+function buildDatabaseUrl() {
+  if (process.env.DATABASE_URL) {
+    return process.env.DATABASE_URL;
+  }
 
-  return dbUrl;
+  const {
+    POSTGRES_USER,
+    POSTGRES_PASSWORD,
+    POSTGRES_HOST,
+    POSTGRES_PORT,
+    POSTGRES_DB,
+  } = process.env;
+  if (
+    !POSTGRES_USER ||
+    !POSTGRES_PASSWORD ||
+    !POSTGRES_HOST ||
+    !POSTGRES_PORT ||
+    !POSTGRES_DB
+  ) {
+    throw new Error("Missing DB env vars");
+  }
+  return `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public`;
 }
 
 export default defineConfig({
@@ -18,6 +36,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: getDatabaseUrl(),
+    url: buildDatabaseUrl(),
   },
 });
