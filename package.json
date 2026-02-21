@@ -9,7 +9,7 @@
     "wait-for-db": "node infra/scripts/wait-for-db.js",
     "build": "next build",
     "db:up": "docker compose down -v && docker compose up -d && npm run wait-for-db",
-    "migrations:dev": "npm run db:up && npx prisma migrate dev",
+    "migrations:dev": "npm run db:up && npx prisma migrate dev && npx prisma generate",
     "migrations:prod:pr": "npm run db:up && npx prisma validate && npx prisma migrate deploy",
     "migrations:prod:push": "npx prisma validate && npx prisma migrate deploy",
     "start": "next start",
