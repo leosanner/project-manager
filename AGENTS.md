@@ -103,6 +103,7 @@ The `.ai` folder is responsible for:
 - RAG configuration (chunking, metadata, vector store rules)
 - Context assembly logic
 - Versioned AI behaviors
+- Branding system and UI direction (`.ai/branding.md`)
 
 This ensures:
 
@@ -120,6 +121,7 @@ This ensures:
 - AI should enhance workflows, not replace structured logic
 - Internal core must be stable before expanding client features
 - All AI behaviors should be reproducible and testable
+- UI generation tasks must follow `.ai/branding.md`
 
 ---
 
