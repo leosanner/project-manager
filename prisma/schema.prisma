@@ -88,4 +88,39 @@ model Project {
 
   author    User   @relation(fields: [authorId], references: [id])
   authorId  String
+  documents Document[]
+  features  Feature[]
 }
+
+model Document {
+  id        String @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+  // inserção de tipos, algo como (um ENUM)
+}
+
+model Feature {
+  id        Int @id @default(autoincrement())
+  description  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  completed    Boolean  @default(false)
+  deadline     DateTime
+  project      Project  @relation(fields: [projectId], references: [id])
+  projectId    String
+  tasks        Task[]
+}
+
+model Task {
+  id      Int @id @default(autoincrement())
+  description String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  completed    Boolean  @default(false)
+  feature      Feature  @relation(fields: [featureId], references: [id])
+  featureId    Int
+}
+

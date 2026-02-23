@@ -167,6 +167,8 @@ export type ProjectWhereInput = {
   name?: Prisma.StringFilter<"Project"> | string
   authorId?: Prisma.StringFilter<"Project"> | string
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  documents?: Prisma.DocumentListRelationFilter
+  features?: Prisma.FeatureListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -174,6 +176,8 @@ export type ProjectOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   author?: Prisma.UserOrderByWithRelationInput
+  documents?: Prisma.DocumentOrderByRelationAggregateInput
+  features?: Prisma.FeatureOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -184,6 +188,8 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Project"> | string
   authorId?: Prisma.StringFilter<"Project"> | string
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  documents?: Prisma.DocumentListRelationFilter
+  features?: Prisma.FeatureListRelationFilter
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -208,24 +214,32 @@ export type ProjectCreateInput = {
   id?: string
   name: string
   author: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  features?: Prisma.FeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
   id?: string
   name: string
   authorId: string
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.FeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  features?: Prisma.FeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.FeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -273,6 +287,11 @@ export type ProjectMinOrderByAggregateInput = {
   authorId?: Prisma.SortOrder
 }
 
+export type ProjectScalarRelationFilter = {
+  is?: Prisma.ProjectWhereInput
+  isNot?: Prisma.ProjectWhereInput
+}
+
 export type ProjectCreateNestedManyWithoutAuthorInput = {
   create?: Prisma.XOR<Prisma.ProjectCreateWithoutAuthorInput, Prisma.ProjectUncheckedCreateWithoutAuthorInput> | Prisma.ProjectCreateWithoutAuthorInput[] | Prisma.ProjectUncheckedCreateWithoutAuthorInput[]
   connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutAuthorInput | Prisma.ProjectCreateOrConnectWithoutAuthorInput[]
@@ -315,14 +334,46 @@ export type ProjectUncheckedUpdateManyWithoutAuthorNestedInput = {
   deleteMany?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
 }
 
+export type ProjectCreateNestedOneWithoutDocumentsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutDocumentsInput, Prisma.ProjectUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutDocumentsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutDocumentsInput, Prisma.ProjectUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutDocumentsInput
+  upsert?: Prisma.ProjectUpsertWithoutDocumentsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutDocumentsInput, Prisma.ProjectUpdateWithoutDocumentsInput>, Prisma.ProjectUncheckedUpdateWithoutDocumentsInput>
+}
+
+export type ProjectCreateNestedOneWithoutFeaturesInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutFeaturesInput, Prisma.ProjectUncheckedCreateWithoutFeaturesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutFeaturesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutFeaturesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutFeaturesInput, Prisma.ProjectUncheckedCreateWithoutFeaturesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutFeaturesInput
+  upsert?: Prisma.ProjectUpsertWithoutFeaturesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutFeaturesInput, Prisma.ProjectUpdateWithoutFeaturesInput>, Prisma.ProjectUncheckedUpdateWithoutFeaturesInput>
+}
+
 export type ProjectCreateWithoutAuthorInput = {
   id?: string
   name: string
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+  features?: Prisma.FeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutAuthorInput = {
   id?: string
   name: string
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.FeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutAuthorInput = {
@@ -360,6 +411,94 @@ export type ProjectScalarWhereInput = {
   authorId?: Prisma.StringFilter<"Project"> | string
 }
 
+export type ProjectCreateWithoutDocumentsInput = {
+  id?: string
+  name: string
+  author: Prisma.UserCreateNestedOneWithoutProjectsInput
+  features?: Prisma.FeatureCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutDocumentsInput = {
+  id?: string
+  name: string
+  authorId: string
+  features?: Prisma.FeatureUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutDocumentsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutDocumentsInput, Prisma.ProjectUncheckedCreateWithoutDocumentsInput>
+}
+
+export type ProjectUpsertWithoutDocumentsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutDocumentsInput, Prisma.ProjectUncheckedUpdateWithoutDocumentsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutDocumentsInput, Prisma.ProjectUncheckedCreateWithoutDocumentsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutDocumentsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutDocumentsInput, Prisma.ProjectUncheckedUpdateWithoutDocumentsInput>
+}
+
+export type ProjectUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  features?: Prisma.FeatureUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  features?: Prisma.FeatureUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutFeaturesInput = {
+  id?: string
+  name: string
+  author: Prisma.UserCreateNestedOneWithoutProjectsInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutFeaturesInput = {
+  id?: string
+  name: string
+  authorId: string
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutFeaturesInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutFeaturesInput, Prisma.ProjectUncheckedCreateWithoutFeaturesInput>
+}
+
+export type ProjectUpsertWithoutFeaturesInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutFeaturesInput, Prisma.ProjectUncheckedUpdateWithoutFeaturesInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutFeaturesInput, Prisma.ProjectUncheckedCreateWithoutFeaturesInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutFeaturesInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutFeaturesInput, Prisma.ProjectUncheckedUpdateWithoutFeaturesInput>
+}
+
+export type ProjectUpdateWithoutFeaturesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutFeaturesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+}
+
 export type ProjectCreateManyAuthorInput = {
   id?: string
   name: string
@@ -368,11 +507,15 @@ export type ProjectCreateManyAuthorInput = {
 export type ProjectUpdateWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  documents?: Prisma.DocumentUpdateManyWithoutProjectNestedInput
+  features?: Prisma.FeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.FeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutAuthorInput = {
@@ -381,12 +524,53 @@ export type ProjectUncheckedUpdateManyWithoutAuthorInput = {
 }
 
 
+/**
+ * Count Type ProjectCountOutputType
+ */
+
+export type ProjectCountOutputType = {
+  documents: number
+  features: number
+}
+
+export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  documents?: boolean | ProjectCountOutputTypeCountDocumentsArgs
+  features?: boolean | ProjectCountOutputTypeCountFeaturesArgs
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectCountOutputType
+   */
+  select?: Prisma.ProjectCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountFeaturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeatureWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   authorId?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  documents?: boolean | Prisma.Project$documentsArgs<ExtArgs>
+  features?: boolean | Prisma.Project$featuresArgs<ExtArgs>
+  _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
 export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -412,6 +596,9 @@ export type ProjectSelectScalar = {
 export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "authorId", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  documents?: boolean | Prisma.Project$documentsArgs<ExtArgs>
+  features?: boolean | Prisma.Project$featuresArgs<ExtArgs>
+  _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -424,6 +611,8 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Project"
   objects: {
     author: Prisma.$UserPayload<ExtArgs>
+    documents: Prisma.$DocumentPayload<ExtArgs>[]
+    features: Prisma.$FeaturePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -824,6 +1013,8 @@ readonly fields: ProjectFieldRefs;
 export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  documents<T extends Prisma.Project$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  features<T extends Prisma.Project$featuresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$featuresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1249,6 +1440,54 @@ export type ProjectDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Projects to delete.
    */
   limit?: number
+}
+
+/**
+ * Project.documents
+ */
+export type Project$documentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Document
+   */
+  select?: Prisma.DocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Document
+   */
+  omit?: Prisma.DocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentInclude<ExtArgs> | null
+  where?: Prisma.DocumentWhereInput
+  orderBy?: Prisma.DocumentOrderByWithRelationInput | Prisma.DocumentOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[]
+}
+
+/**
+ * Project.features
+ */
+export type Project$featuresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Feature
+   */
+  select?: Prisma.FeatureSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Feature
+   */
+  omit?: Prisma.FeatureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeatureInclude<ExtArgs> | null
+  where?: Prisma.FeatureWhereInput
+  orderBy?: Prisma.FeatureOrderByWithRelationInput | Prisma.FeatureOrderByWithRelationInput[]
+  cursor?: Prisma.FeatureWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeatureScalarFieldEnum | Prisma.FeatureScalarFieldEnum[]
 }
 
 /**
