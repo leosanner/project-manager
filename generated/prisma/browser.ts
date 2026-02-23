@@ -42,3 +42,18 @@ export type Verification = Prisma.VerificationModel
  * 
  */
 export type Project = Prisma.ProjectModel
+/**
+ * Model Document
+ * 
+ */
+export type Document = Prisma.DocumentModel
+/**
+ * Model Feature
+ * 
+ */
+export type Feature = Prisma.FeatureModel
+/**
+ * Model Task
+ * 
+ */
+export type Task = Prisma.TaskModel
