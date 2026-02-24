@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma/index";
 
-class UserRepository {
+export class UserRepository {
   async getUserById(userId: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -13,5 +13,3 @@ class UserRepository {
     return await prisma.user.findMany();
   }
 }
-
-export const userRepository = new UserRepository();
