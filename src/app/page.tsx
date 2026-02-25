@@ -1,9 +1,11 @@
+import { getUser } from "@/lib/auth/session";
 import Link from "next/link";
 import Script from "next/script";
 
 const SPLINE_SCENE_URL = "/scene-clean.splinecode";
 
-export default function Home() {
+export default async function Home() {
+  const user = await getUser();
   return (
     <>
       <Script
@@ -38,7 +40,11 @@ export default function Home() {
               </a>
             </nav>
             <button className="pointer-events-auto rounded-full border border-[#ff7b57] bg-black/45 px-7 py-3 text-base font-semibold text-white transition hover:bg-white/10">
-              <Link href={"/login"}>Let&apos;s Talk!</Link>
+              {user ? (
+                <Link href={"/home"}>User Page</Link>
+              ) : (
+                <Link href={"/login"}>Login</Link>
+              )}
             </button>
           </div>
         </header>
