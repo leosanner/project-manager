@@ -15,6 +15,7 @@ export class FeatureModel {
     const featureTasks = await this.taskRepository.getTasksByFeature(
       data.featureId,
     );
+
     return featureTasks?.filter(
       (task) => task.authorId === data.featureAuthorId,
     );
