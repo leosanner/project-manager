@@ -1,6 +1,5 @@
 import { ProjectService } from "@/model/project";
-import { Component as BauhausCard } from "@/components/ui/bauhaus-card";
-import { TaskList } from "@/components/ui/task-list";
+import { TaskList, type Task } from "@/components/ui/task-list";
 import Link from "next/link";
 
 type PageProps = {
@@ -11,8 +10,7 @@ export default async function Page({ params }: PageProps) {
   const { id } = await params;
   const projectModel = new ProjectService();
   const projectFeatures = await projectModel.getProjectFeatures(id);
-  const totalFeatures = projectFeatures ? projectFeatures.length : 0;
-  const featureTasks =
+  const featureTasks: Task[] =
     projectFeatures?.map((feature) => ({
       id: feature.id,
       task: feature.description,
