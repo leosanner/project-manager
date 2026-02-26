@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { ChronicleButton } from "./chronicle-button";
+import Link from "next/link";
 
 const BAUHAUS_CARD_STYLES = `
 .bauhaus-card {
@@ -171,12 +172,15 @@ export interface BauhausCardProps {
   borderWidth?: string;
   topInscription: string;
   mainText: string;
+  mainTextHref?: string;
   subMainText: React.ReactNode;
   progressBarInscription: string;
   progress: number;
   progressValue: string;
   filledButtonInscription?: string;
   outlinedButtonInscription?: string;
+  filledButtonHref?: string;
+  outlinedButtonHref?: string;
   onFilledButtonClick?: (id: string) => void;
   onOutlinedButtonClick?: (id: string) => void;
   onMoreOptionsClick?: (id: string) => void;
@@ -205,12 +209,15 @@ export const Component: React.FC<BauhausCardProps> = ({
   topInscription = "Not Set!",
   swapButtons = false,
   mainText = "Not Set!",
+  mainTextHref,
   subMainText = "Not Set!",
   progressBarInscription = "Not Set!",
   progress = 0,
   progressValue = "Not Set!",
   filledButtonInscription = "Not Set!",
   outlinedButtonInscription = "Not Set!",
+  filledButtonHref,
+  outlinedButtonHref,
   onFilledButtonClick,
   onOutlinedButtonClick,
   onMoreOptionsClick,
@@ -289,17 +296,38 @@ export const Component: React.FC<BauhausCardProps> = ({
         </div>
         <button
           onClick={() => onMoreOptionsClick?.(id)}
-          style={{ cursor: "pointer", background: "transparent", border: "none" }}
+          style={{
+            cursor: "pointer",
+            background: "transparent",
+            border: "none",
+          }}
           type="button"
           aria-label="Project options"
         >
-          <MoreHorizontal size={22} className="bauhaus-size6" color="currentColor" />
+          <MoreHorizontal
+            size={22}
+            className="bauhaus-size6"
+            color="currentColor"
+          />
         </button>
       </div>
 
       <div className="bauhaus-card-body">
-        <h3 style={{ direction: isRTL(mainText) ? "rtl" : "ltr" }}>{mainText}</h3>
-        <p style={{ direction: isRTL(String(subMainText)) ? "rtl" : "ltr" }}>{subMainText}</p>
+        <h3 style={{ direction: isRTL(mainText) ? "rtl" : "ltr" }}>
+          {mainTextHref ? (
+            <Link
+              href={mainTextHref}
+              className="transition-colors hover:text-[var(--card-accent,#156ef6)]"
+            >
+              {mainText}
+            </Link>
+          ) : (
+            mainText
+          )}
+        </h3>
+        <p style={{ direction: isRTL(String(subMainText)) ? "rtl" : "ltr" }}>
+          {subMainText}
+        </p>
         {!hideProgress && (
           <div className="bauhaus-progress">
             <span
@@ -339,6 +367,7 @@ export const Component: React.FC<BauhausCardProps> = ({
             <>
               <ChronicleButton
                 text={outlinedButtonInscription}
+                href={outlinedButtonHref}
                 outlined={true}
                 width="124px"
                 onClick={() => onOutlinedButtonClick?.(id)}
@@ -350,6 +379,7 @@ export const Component: React.FC<BauhausCardProps> = ({
               />
               <ChronicleButton
                 text={filledButtonInscription}
+                href={filledButtonHref}
                 width="124px"
                 onClick={() => onFilledButtonClick?.(id)}
                 borderRadius={borderRadius}
@@ -363,6 +393,7 @@ export const Component: React.FC<BauhausCardProps> = ({
             <>
               <ChronicleButton
                 text={filledButtonInscription}
+                href={filledButtonHref}
                 width="124px"
                 onClick={() => onFilledButtonClick?.(id)}
                 borderRadius={borderRadius}
@@ -373,6 +404,7 @@ export const Component: React.FC<BauhausCardProps> = ({
               />
               <ChronicleButton
                 text={outlinedButtonInscription}
+                href={outlinedButtonHref}
                 outlined={true}
                 width="124px"
                 onClick={() => onOutlinedButtonClick?.(id)}

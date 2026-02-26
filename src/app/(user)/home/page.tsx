@@ -53,9 +53,9 @@ export default async function Home() {
               </p>
             </div>
 
-            <button
-              type="button"
-              className="cursor-pointer inline-flex items-center gap-3 self-start rounded-lg px-6 py-4 transition-all duration-300 hover:-translate-y-0.5"
+            <Link
+              href="/project/new"
+              className="inline-flex cursor-pointer items-center gap-3 self-start rounded-lg px-6 py-4 transition-all duration-300 hover:-translate-y-0.5"
               style={{
                 backgroundColor: "#0A0A0A",
                 border: "1px solid rgba(57, 213, 255, 0.4)",
@@ -64,9 +64,9 @@ export default async function Home() {
             >
               <Plus size={20} color="#39D5FF" strokeWidth={2.5} />
               <span className="text-base font-semibold tracking-[0.01em] text-white">
-                <Link href={"/project/new"}>New Project</Link>
+                New Project
               </span>
-            </button>
+            </Link>
           </div>
         </header>
 
@@ -122,7 +122,6 @@ export default async function Home() {
                     year: "numeric",
                   },
                 );
-
                 return (
                   <div
                     key={`${project.projectName}-${index}`}
@@ -137,12 +136,14 @@ export default async function Home() {
                       borderWidth="2px"
                       topInscription={`Updated ${formattedDate}`}
                       mainText={project.projectName}
+                      mainTextHref={`/project/${project.projectId}`}
                       subMainText={`${project.totalFeatures} Features • ${project.totalTasks} Tasks`}
                       progressBarInscription=""
                       progress={0}
                       progressValue=""
                       hideProgress={true}
                       filledButtonInscription="Features"
+                      filledButtonHref={`/project/${project.projectId}/new-feature`}
                       outlinedButtonInscription="Docs"
                       textColorTop="#C7CCD6"
                       textColorMain="#FFFFFF"
