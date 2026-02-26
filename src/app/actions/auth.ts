@@ -40,6 +40,7 @@ export async function loginAction(
         },
       };
     }
+    throw error;
   }
 
   redirect("/");

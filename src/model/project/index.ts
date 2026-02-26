@@ -46,6 +46,7 @@ export class ProjectService {
           : 0;
 
       return {
+        projectId: proj.id,
         projectName: proj.name,
         updatedAt: proj.updatedAt,
         totalTasks: tasksNumber,

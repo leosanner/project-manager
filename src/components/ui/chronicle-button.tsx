@@ -106,6 +106,7 @@ const styles = `
 interface ChronicleButtonProps {
   text: string;
   onClick?: () => void;
+  href?: string;
   hoverColor?: string;
   width?: string;
   outlined?: boolean;
@@ -120,6 +121,7 @@ interface ChronicleButtonProps {
 export const ChronicleButton: React.FC<ChronicleButtonProps> = ({
   text,
   onClick,
+  href,
   hoverColor = "#a594fd",
   width = "160px",
   outlined = false,
@@ -152,10 +154,18 @@ export const ChronicleButton: React.FC<ChronicleButtonProps> = ({
     borderRadius,
   } as React.CSSProperties;
 
+  const handleClick = () => {
+    if (href) {
+      window.location.href = href;
+      return;
+    }
+    onClick?.();
+  };
+
   return (
     <button
       className={`chronicleButton${outlined ? " outlined" : ""}`}
-      onClick={onClick}
+      onClick={handleClick}
       style={buttonStyle}
       type="button"
     >
