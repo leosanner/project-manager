@@ -28,6 +28,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   projects      Project[]
+  tasks         Task[]
 
   @@unique([email])
   @@map("user")
@@ -124,5 +125,7 @@ model Task {
   completed    Boolean  @default(false)
   feature      Feature  @relation(fields: [featureId], references: [id])
   featureId    Int
+  author       User     @relation(fields: [authorId], references: [id])
+  authorId     String
 }
 

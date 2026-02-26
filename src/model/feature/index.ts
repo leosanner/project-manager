@@ -8,6 +8,16 @@ export class FeatureModel {
     this.featureRepository = new FeatureRepository();
   }
 
+  async getFeatureTasks(data: { featureId: number; featureAuthorId: string }) {
+    const featureTasks = await this.featureRepository.getFeatureTasks(
+      data.featureId,
+    );
+
+    return featureTasks?.filter(
+      (task) => task.authorId === data.featureAuthorId,
+    );
+  }
+
   async createFeature(featureData: FeatureUncheckedCreateInput) {
     return await this.featureRepository.createFeature(featureData);
   }
