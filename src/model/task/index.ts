@@ -8,6 +8,6 @@ export class TaskModel {
   }
 
   async createTask(taskInputData: TaskUncheckedCreateInput) {
-    this.taskRepository.createTask(taskInputData);
+    return await this.taskRepository.createTask(taskInputData);
   }
 }
