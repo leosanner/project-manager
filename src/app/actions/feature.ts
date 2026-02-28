@@ -1,6 +1,6 @@
 "use server";
 
-import { FeatureModel } from "@/model/feature";
+import { FeatureService } from "@/model/feature";
 import { createFeatureSchema } from "@/schemas/feature";
 import { validadeSchema } from "@/utils/schemas";
 import { redirect } from "next/navigation";
@@ -22,7 +22,7 @@ export async function createFeatureAction(
     return schemaValidated;
   }
 
-  const featureModel = new FeatureModel();
+  const featureModel = new FeatureService();
   const parsedObj = featureSchema.parse(formObject);
 
   try {

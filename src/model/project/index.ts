@@ -1,7 +1,6 @@
 import { FeatureRepository } from "@/repository/feature";
 import { ProjectRepository } from "@/repository/project";
 import { ProjectUncheckedCreateInput } from "../../../generated/prisma/models";
-import { projectEntrypoints } from "next/dist/build/swc/generated-native";
 
 export class ProjectService {
   projectRepository: ProjectRepository;
@@ -30,6 +29,10 @@ export class ProjectService {
 
   async getProjectFeatures(projectId: string) {
     return await this.projectRepository.getProjectFeatures(projectId);
+  }
+
+  async getTotalFeatures(userId: string) {
+    return await this.projectRepository.getTotalFeatures(userId);
   }
 
   async displayUserProjectsSummary(userId: string) {

@@ -4,8 +4,12 @@ import { summUserProjects } from "@/utils/project";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { ProjectService } from "@/model/project";
+import { UserService } from "@/model/user";
 
 export default async function Home() {
+  const userService = new UserService();
+  await userService.getUserFeatures();
+
   const user = await getUser();
   if (!user) {
     return null;

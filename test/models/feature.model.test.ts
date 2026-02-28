@@ -1,8 +1,8 @@
-import { FeatureModel } from "@/model/feature";
+import { FeatureService } from "@/model/feature";
 
 describe("FeatureModel", () => {
   it("filters feature tasks by author", async () => {
-    const model = new FeatureModel();
+    const model = new FeatureService();
     const getTasksByFeatureMock = jest.fn().mockResolvedValue([
       { id: 1, description: "A", authorId: "user-1" },
       { id: 2, description: "B", authorId: "user-2" },
@@ -26,7 +26,7 @@ describe("FeatureModel", () => {
   });
 
   it("delegates createFeature to repository", async () => {
-    const model = new FeatureModel();
+    const model = new FeatureService();
     const createFeatureMock = jest.fn().mockResolvedValue({ id: 10 });
 
     model.featureRepository = {

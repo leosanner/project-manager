@@ -1,5 +1,5 @@
 import { getUser } from "@/lib/auth/session";
-import { FeatureModel } from "@/model/feature";
+import { FeatureService } from "@/model/feature";
 import { ProjectService } from "@/model/project";
 import { TaskList, type Task } from "@/components/ui/task-list";
 import { redirect } from "next/navigation";
@@ -21,7 +21,7 @@ export default async function Page({ params }: PageProps) {
   }
 
   const projectModel = new ProjectService();
-  const featureModel = new FeatureModel();
+  const featureModel = new FeatureService();
   const projectFeatures = await projectModel.getProjectFeatures(id);
   const currentFeature = projectFeatures?.find(
     (feature) => feature.id === parsedFeatureId,

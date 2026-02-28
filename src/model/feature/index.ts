@@ -2,13 +2,17 @@ import { FeatureRepository } from "@/repository/feature";
 import { FeatureUncheckedCreateInput } from "../../../generated/prisma/models";
 import { TaskRepository } from "@/repository/task";
 
-export class FeatureModel {
+export class FeatureService {
   featureRepository: FeatureRepository;
   taskRepository: TaskRepository;
 
   constructor() {
     this.featureRepository = new FeatureRepository();
     this.taskRepository = new TaskRepository();
+  }
+
+  async displayUserFeatures(projectIds: string[]) {
+    return await this.featureRepository.displayUserFeatures(projectIds);
   }
 
   async getFeatureTasks(data: { featureId: number; featureAuthorId: string }) {
