@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { ProjectService } from "@/model/project";
 import { UserService } from "@/model/user";
+import { FullscreenCalendarDemo } from "@/components/ui/fullscreen-calendar-demo";
 
 export default async function Home() {
   const userService = new UserService();
@@ -97,6 +98,17 @@ export default async function Home() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="mb-14 md:mb-16">
+          <div className="mb-6">
+            <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
+              Calendar
+            </h2>
+          </div>
+          <div className="mx-auto h-[980px] max-w-[1100px] md:h-[1040px]">
+            <FullscreenCalendarDemo />
           </div>
         </section>
 
