@@ -1,8 +1,17 @@
 "use client";
 
-import { FullScreenCalendar } from "@/components/ui/fullscreen-calendar";
+import * as React from "react";
+import {
+  CalendarData,
+  FullScreenCalendar,
+} from "@/components/ui/fullscreen-calendar";
 
-const dummyEvents = [
+type SerializableCalendarData = {
+  day: string | Date;
+  events: CalendarData["events"];
+};
+
+const dummyEvents: SerializableCalendarData[] = [
   {
     day: new Date("2025-01-02"),
     events: [
@@ -102,13 +111,25 @@ const dummyEvents = [
   },
 ];
 
-function FullscreenCalendarDemo() {
+interface FullscreenCalendarDemoProps {
+  data?: SerializableCalendarData[];
+}
+
+function FullscreenCalendarDemo({ data }: FullscreenCalendarDemoProps) {
+  const parsedData = React.useMemo<CalendarData[]>(
+    () =>
+      (data ?? dummyEvents).map((item) => ({
+        day: item.day instanceof Date ? item.day : new Date(item.day),
+        events: item.events,
+      })),
+    [data],
+  );
+
   return (
     <div className="flex h-full flex-1 flex-col rounded-lg border border-white/20 bg-[#0A0A0A] p-2">
-      <FullScreenCalendar data={dummyEvents} />
+      <FullScreenCalendar data={parsedData} />
     </div>
   );
 }
 
 export { FullscreenCalendarDemo };
-

@@ -6,10 +6,12 @@ import Link from "next/link";
 import { ProjectService } from "@/model/project";
 import { UserService } from "@/model/user";
 import { FullscreenCalendarDemo } from "@/components/ui/fullscreen-calendar-demo";
+import { format } from "date-fns";
+import { getProjectColor } from "@/utils/colors-for-calendar";
 
 export default async function Home() {
   const userService = new UserService();
-  await userService.getUserFeatures();
+  const featuresByProject = await userService.getUserFeatures();
 
   const user = await getUser();
   if (!user) {
@@ -17,6 +19,43 @@ export default async function Home() {
   }
   const projectService = new ProjectService();
   const projects = await projectService.displayUserProjectsSummary(user.id);
+  const calendarByDay = Object.values(featuresByProject)
+    .flat()
+    .reduce<
+      Record<
+        string,
+        {
+          day: string;
+          events: Array<{
+            id: number;
+            name: string;
+            time: string;
+            datetime: string;
+            color: string;
+          }>;
+        }
+      >
+    >((acc, feature) => {
+      const day = format(feature.featureDeadline, "yyyy-MM-dd");
+
+      if (!acc[day]) {
+        acc[day] = { day, events: [] };
+      }
+
+      acc[day].events.push({
+        id: feature.featureId,
+        name: feature.featureName,
+        time: feature.projectName,
+        datetime: feature.featureDeadline.toISOString(),
+        color: getProjectColor(feature.projectId),
+      });
+
+      return acc;
+    }, {});
+
+  const calendarEvents = Object.values(calendarByDay).sort((a, b) =>
+    a.day.localeCompare(b.day),
+  );
 
   const projectsSummary = summUserProjects(projects);
   const accentColors = ["#39D5FF", "#8B5CF6", "#FF4D73", "#FF8A3D", "#FFD24A"];
@@ -108,7 +147,7 @@ export default async function Home() {
             </h2>
           </div>
           <div className="mx-auto h-[980px] max-w-[1100px] md:h-[1040px]">
-            <FullscreenCalendarDemo />
+            <FullscreenCalendarDemo data={calendarEvents} />
           </div>
         </section>
 

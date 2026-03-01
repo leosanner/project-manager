@@ -28,14 +28,15 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
-interface Event {
+export interface Event {
   id: number;
   name: string;
   time: string;
   datetime: string;
+  color?: string;
 }
 
-interface CalendarData {
+export interface CalendarData {
   day: Date;
   events: Event[];
 }
@@ -210,6 +211,11 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                               <span
                                 key={event.id}
                                 className="mx-0.5 mt-1 h-1.5 w-1.5 rounded-full bg-muted-foreground"
+                                style={
+                                  event.color
+                                    ? { backgroundColor: event.color }
+                                    : undefined
+                                }
                               />
                             ))}
                           </div>
@@ -262,6 +268,14 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                             <div
                               key={event.id}
                               className="flex flex-col items-start gap-1 rounded-lg border bg-muted/50 p-2 text-xs leading-tight"
+                              style={
+                                event.color
+                                  ? {
+                                      borderColor: event.color,
+                                      backgroundColor: `${event.color}1A`,
+                                    }
+                                  : undefined
+                              }
                             >
                               <p className="leading-none font-medium">{event.name}</p>
                               <p className="leading-none text-muted-foreground">{event.time}</p>
@@ -327,6 +341,11 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                             <span
                               key={event.id}
                               className="mx-0.5 mt-1 h-1.5 w-1.5 rounded-full bg-muted-foreground"
+                              style={
+                                event.color
+                                  ? { backgroundColor: event.color }
+                                  : undefined
+                              }
                             />
                           ))}
                         </div>
@@ -341,4 +360,3 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
     </div>
   );
 }
-
