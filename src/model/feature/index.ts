@@ -26,6 +26,7 @@ export class FeatureService {
   }
 
   async createFeature(featureData: FeatureUncheckedCreateInput) {
+    console.log(featureData);
     return await this.featureRepository.createFeature(featureData);
   }
 }

@@ -115,11 +115,25 @@ interface FullscreenCalendarDemoProps {
   data?: SerializableCalendarData[];
 }
 
+function parseDateAsLocal(value: string | Date) {
+  if (value instanceof Date) {
+    return value;
+  }
+
+  const dateOnlyMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (dateOnlyMatch) {
+    const [, year, month, day] = dateOnlyMatch;
+    return new Date(Number(year), Number(month) - 1, Number(day), 12, 0, 0, 0);
+  }
+
+  return new Date(value);
+}
+
 function FullscreenCalendarDemo({ data }: FullscreenCalendarDemoProps) {
   const parsedData = React.useMemo<CalendarData[]>(
     () =>
       (data ?? dummyEvents).map((item) => ({
-        day: item.day instanceof Date ? item.day : new Date(item.day),
+        day: parseDateAsLocal(item.day),
         events: item.events,
       })),
     [data],

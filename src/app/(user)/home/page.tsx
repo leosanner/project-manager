@@ -6,8 +6,14 @@ import Link from "next/link";
 import { ProjectService } from "@/model/project";
 import { UserService } from "@/model/user";
 import { FullscreenCalendarDemo } from "@/components/ui/fullscreen-calendar-demo";
-import { format } from "date-fns";
 import { getProjectColor } from "@/utils/colors-for-calendar";
+
+const formatUtcDateKey = (date: Date) => {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 export default async function Home() {
   const userService = new UserService();
@@ -32,11 +38,13 @@ export default async function Home() {
             time: string;
             datetime: string;
             color: string;
+            featureId: number;
+            featureName: string;
           }>;
         }
       >
     >((acc, feature) => {
-      const day = format(feature.featureDeadline, "yyyy-MM-dd");
+      const day = formatUtcDateKey(feature.featureDeadline);
 
       if (!acc[day]) {
         acc[day] = { day, events: [] };
@@ -48,6 +56,8 @@ export default async function Home() {
         time: feature.projectName,
         datetime: feature.featureDeadline.toISOString(),
         color: getProjectColor(feature.projectId),
+        featureId: feature.featureId,
+        featureName: feature.featureName,
       });
 
       return acc;

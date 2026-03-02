@@ -26,7 +26,6 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useMediaQuery } from "@/hooks/use-media-query";
 
 export interface Event {
   id: number;
@@ -34,6 +33,8 @@ export interface Event {
   time: string;
   datetime: string;
   color?: string;
+  featureId?: number | string;
+  featureName?: string;
 }
 
 export interface CalendarData {
@@ -44,6 +45,13 @@ export interface CalendarData {
 interface FullScreenCalendarProps {
   data: CalendarData[];
 }
+
+type FeatureGroup = {
+  id: string;
+  name: string;
+  color?: string;
+  events: Event[];
+};
 
 const colStartClasses = [
   "",
@@ -59,8 +67,10 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = React.useState(today);
   const [currentMonth, setCurrentMonth] = React.useState(format(today, "MMM-yyyy"));
+  const [expandedFeatureByDay, setExpandedFeatureByDay] = React.useState<
+    Record<string, string | null>
+  >({});
   const firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
-  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const days = eachDayOfInterval({
     start: startOfWeek(firstDayCurrentMonth),
@@ -79,6 +89,39 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
 
   function goToToday() {
     setCurrentMonth(format(today, "MMM-yyyy"));
+  }
+
+  function groupEventsByFeature(events: Event[]): FeatureGroup[] {
+    const grouped = events.reduce<Record<string, FeatureGroup>>((acc, event) => {
+      const groupId = String(event.featureId ?? event.id);
+
+      if (!acc[groupId]) {
+        acc[groupId] = {
+          id: groupId,
+          name: event.featureName ?? event.name,
+          color: event.color,
+          events: [],
+        };
+      }
+
+      acc[groupId].events.push(event);
+      return acc;
+    }, {});
+
+    return Object.values(grouped);
+  }
+
+  function toggleFeatureEvents(day: Date, featureId: string) {
+    const dayKey = format(day, "yyyy-MM-dd");
+    setExpandedFeatureByDay((current) => ({
+      ...current,
+      [dayKey]: current[dayKey] === featureId ? null : featureId,
+    }));
+  }
+
+  function getDayFeatureGroups(day: Date) {
+    const dayData = data.find((eventDate) => isSameDay(eventDate.day, day));
+    return dayData ? groupEventsByFeature(dayData.events) : [];
   }
 
   return (
@@ -164,66 +207,15 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
 
         <div className="flex text-xs leading-6 lg:flex-auto">
           <div className="hidden w-full border-x lg:grid lg:grid-cols-7 lg:grid-rows-5">
-            {days.map((day, dayIdx) =>
-              !isDesktop ? (
-                <button
-                  onClick={() => setSelectedDay(day)}
-                  key={dayIdx}
-                  type="button"
-                  className={cn(
-                    isEqual(day, selectedDay) && "text-primary-foreground",
-                    !isEqual(day, selectedDay) &&
-                      !isToday(day) &&
-                      isSameMonth(day, firstDayCurrentMonth) &&
-                      "text-foreground",
-                    !isEqual(day, selectedDay) &&
-                      !isToday(day) &&
-                      !isSameMonth(day, firstDayCurrentMonth) &&
-                      "text-muted-foreground",
-                    (isEqual(day, selectedDay) || isToday(day)) && "font-semibold",
-                    "flex h-14 flex-col border-r border-b px-3 py-2 hover:bg-muted focus:z-10",
-                  )}
-                >
-                  <time
-                    dateTime={format(day, "yyyy-MM-dd")}
-                    className={cn(
-                      "ml-auto flex size-6 items-center justify-center rounded-full",
-                      isEqual(day, selectedDay) &&
-                        isToday(day) &&
-                        "bg-primary text-primary-foreground",
-                      isEqual(day, selectedDay) &&
-                        !isToday(day) &&
-                        "bg-primary text-primary-foreground",
-                    )}
-                  >
-                    {format(day, "d")}
-                  </time>
-                  {data.filter((date) => isSameDay(date.day, day)).length > 0 && (
-                    <div>
-                      {data
-                        .filter((date) => isSameDay(date.day, day))
-                        .map((date) => (
-                          <div
-                            key={date.day.toString()}
-                            className="-mx-0.5 mt-auto flex flex-wrap-reverse"
-                          >
-                            {date.events.map((event) => (
-                              <span
-                                key={event.id}
-                                className="mx-0.5 mt-1 h-1.5 w-1.5 rounded-full bg-muted-foreground"
-                                style={
-                                  event.color
-                                    ? { backgroundColor: event.color }
-                                    : undefined
-                                }
-                              />
-                            ))}
-                          </div>
-                        ))}
-                    </div>
-                  )}
-                </button>
-              ) : (
+            {days.map((day, dayIdx) => {
+              const featureGroups = getDayFeatureGroups(day);
+              const dayKey = format(day, "yyyy-MM-dd");
+              const expandedFeatureId = expandedFeatureByDay[dayKey];
+              const expandedFeature = featureGroups.find(
+                (group) => group.id === expandedFeatureId,
+              );
+
+              return (
                 <div
                   key={dayIdx}
                   onClick={() => setSelectedDay(day)}
@@ -259,101 +251,150 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                       <time dateTime={format(day, "yyyy-MM-dd")}>{format(day, "d")}</time>
                     </button>
                   </header>
-                  <div className="flex-1 p-2.5">
-                    {data
-                      .filter((event) => isSameDay(event.day, day))
-                      .map((dayEvent) => (
-                        <div key={dayEvent.day.toString()} className="space-y-1.5">
-                          {dayEvent.events.slice(0, 1).map((event) => (
-                            <div
-                              key={event.id}
-                              className="flex flex-col items-start gap-1 rounded-lg border bg-muted/50 p-2 text-xs leading-tight"
-                              style={
-                                event.color
-                                  ? {
-                                      borderColor: event.color,
-                                      backgroundColor: `${event.color}1A`,
-                                    }
-                                  : undefined
+                  <div className="flex-1 space-y-2.5 p-2.5">
+                    {featureGroups.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {featureGroups.map((featureGroup) => (
+                          <button
+                            key={featureGroup.id}
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              toggleFeatureEvents(day, featureGroup.id);
+                            }}
+                            className={cn(
+                              "flex h-3.5 w-3.5 items-center justify-center rounded-full border border-white/20 transition-transform hover:scale-110",
+                              expandedFeatureId === featureGroup.id && "scale-110 border-white/50",
+                            )}
+                            style={
+                              featureGroup.color
+                                ? { backgroundColor: featureGroup.color }
+                                : undefined
+                            }
+                            aria-label={`Expandir eventos da feature ${featureGroup.name}`}
+                            title={`${featureGroup.name} (${featureGroup.events.length})`}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    {expandedFeature && (
+                      <div
+                        className="space-y-1 rounded-lg border bg-muted/50 p-2"
+                        style={
+                          expandedFeature.color
+                            ? {
+                                borderColor: expandedFeature.color,
+                                backgroundColor: `${expandedFeature.color}1A`,
                               }
-                            >
-                              <p className="leading-none font-medium">{event.name}</p>
-                              <p className="leading-none text-muted-foreground">{event.time}</p>
-                            </div>
-                          ))}
-                          {dayEvent.events.length > 1 && (
-                            <div className="text-xs text-muted-foreground">
-                              + {dayEvent.events.length - 1} more
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                            : undefined
+                        }
+                      >
+                        <p className="truncate text-xs font-semibold">{expandedFeature.name}</p>
+                        {expandedFeature.events.map((event) => (
+                          <div key={event.id} className="text-xs leading-tight">
+                            <p className="truncate font-medium">{event.name}</p>
+                            <p className="text-muted-foreground">{event.time}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
-              ),
-            )}
+              );
+            })}
           </div>
 
           <div className="isolate grid w-full grid-cols-7 grid-rows-5 border-x lg:hidden">
-            {days.map((day, dayIdx) => (
-              <button
-                onClick={() => setSelectedDay(day)}
-                key={dayIdx}
-                type="button"
-                className={cn(
-                  isEqual(day, selectedDay) && "text-primary-foreground",
-                  !isEqual(day, selectedDay) &&
-                    !isToday(day) &&
-                    isSameMonth(day, firstDayCurrentMonth) &&
-                    "text-foreground",
-                  !isEqual(day, selectedDay) &&
-                    !isToday(day) &&
-                    !isSameMonth(day, firstDayCurrentMonth) &&
-                    "text-muted-foreground",
-                  (isEqual(day, selectedDay) || isToday(day)) && "font-semibold",
-                  "flex h-14 flex-col border-r border-b px-3 py-2 hover:bg-muted focus:z-10",
-                )}
-              >
-                <time
-                  dateTime={format(day, "yyyy-MM-dd")}
+            {days.map((day, dayIdx) => {
+              const featureGroups = getDayFeatureGroups(day);
+              const dayKey = format(day, "yyyy-MM-dd");
+              const expandedFeatureId = expandedFeatureByDay[dayKey];
+              const expandedFeature = featureGroups.find(
+                (group) => group.id === expandedFeatureId,
+              );
+
+              return (
+                <div
+                  onClick={() => setSelectedDay(day)}
+                  key={dayIdx}
                   className={cn(
-                    "ml-auto flex size-6 items-center justify-center rounded-full",
-                    isEqual(day, selectedDay) &&
-                      isToday(day) &&
-                      "bg-primary text-primary-foreground",
-                    isEqual(day, selectedDay) &&
+                    isEqual(day, selectedDay) && "text-primary-foreground",
+                    !isEqual(day, selectedDay) &&
                       !isToday(day) &&
-                      "bg-primary text-primary-foreground",
+                      isSameMonth(day, firstDayCurrentMonth) &&
+                      "text-foreground",
+                    !isEqual(day, selectedDay) &&
+                      !isToday(day) &&
+                      !isSameMonth(day, firstDayCurrentMonth) &&
+                      "text-muted-foreground",
+                    (isEqual(day, selectedDay) || isToday(day)) && "font-semibold",
+                    "flex min-h-14 flex-col border-r border-b px-3 py-2 hover:bg-muted focus:z-10",
                   )}
                 >
-                  {format(day, "d")}
-                </time>
-                {data.filter((date) => isSameDay(date.day, day)).length > 0 && (
-                  <div>
-                    {data
-                      .filter((date) => isSameDay(date.day, day))
-                      .map((date) => (
-                        <div
-                          key={date.day.toString()}
-                          className="-mx-0.5 mt-auto flex flex-wrap-reverse"
-                        >
-                          {date.events.map((event) => (
-                            <span
+                  <time
+                    dateTime={format(day, "yyyy-MM-dd")}
+                    className={cn(
+                      "ml-auto flex size-6 items-center justify-center rounded-full",
+                      isEqual(day, selectedDay) &&
+                        isToday(day) &&
+                        "bg-primary text-primary-foreground",
+                      isEqual(day, selectedDay) &&
+                        !isToday(day) &&
+                        "bg-primary text-primary-foreground",
+                    )}
+                  >
+                    {format(day, "d")}
+                  </time>
+                  {featureGroups.length > 0 && (
+                    <div className="mt-auto space-y-1">
+                      <div className="-mx-0.5 flex flex-wrap-reverse gap-1">
+                        {featureGroups.map((featureGroup) => (
+                          <button
+                            key={featureGroup.id}
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              toggleFeatureEvents(day, featureGroup.id);
+                            }}
+                            className={cn(
+                              "h-2.5 w-2.5 rounded-full border border-white/20 transition-transform",
+                              expandedFeatureId === featureGroup.id &&
+                                "scale-110 border-white/50",
+                            )}
+                            style={
+                              featureGroup.color
+                                ? { backgroundColor: featureGroup.color }
+                                : undefined
+                            }
+                            aria-label={`Expandir eventos da feature ${featureGroup.name}`}
+                          />
+                        ))}
+                      </div>
+                      {expandedFeature && (
+                        <div className="space-y-0.5 rounded border border-white/20 bg-muted/70 p-1">
+                          <p className="truncate text-[10px] font-semibold">
+                            {expandedFeature.name}
+                          </p>
+                          {expandedFeature.events.slice(0, 2).map((event) => (
+                            <p
                               key={event.id}
-                              className="mx-0.5 mt-1 h-1.5 w-1.5 rounded-full bg-muted-foreground"
-                              style={
-                                event.color
-                                  ? { backgroundColor: event.color }
-                                  : undefined
-                              }
-                            />
+                              className="truncate text-[10px] text-muted-foreground"
+                            >
+                              {event.name}
+                            </p>
                           ))}
+                          {expandedFeature.events.length > 2 && (
+                            <p className="text-[10px] text-muted-foreground">
+                              +{expandedFeature.events.length - 2} more
+                            </p>
+                          )}
                         </div>
-                      ))}
-                  </div>
-                )}
-              </button>
-            ))}
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
