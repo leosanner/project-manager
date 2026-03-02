@@ -20,17 +20,13 @@ const colorOptions = [
   colors.rose,
 ];
 
-const colorLight: string[] = [];
-
-for (let i = 50; i <= 950; i += 50) {
-  colorLight.push(String(i));
-}
+const colorShades = ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950"] as const;
 
 export function getRandomColor() {
-  const randomLight = colorLight[Math.floor(Math.random() * colorLight.length)];
+  const randomLight = colorShades[Math.floor(Math.random() * colorShades.length)];
   const color = colorOptions[Math.floor(Math.random() * colorOptions.length)];
 
-  return color[randomLight];
+  return color[randomLight] ?? colors.cyan[500];
 }
 
 const projectPalette = [
@@ -59,5 +55,5 @@ function hashString(value: string) {
 
 export function getProjectColor(projectId: string) {
   const index = hashString(projectId) % projectPalette.length;
-  return projectPalette[index];
+  return projectPalette[index] ?? colors.cyan[500];
 }
