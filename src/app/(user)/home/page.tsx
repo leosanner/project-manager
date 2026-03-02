@@ -4,14 +4,72 @@ import { summUserProjects } from "@/utils/project";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { ProjectService } from "@/model/project";
+import { UserService } from "@/model/user";
+import { FullscreenCalendarDemo } from "@/components/ui/fullscreen-calendar-demo";
+import { getProjectColor } from "@/utils/colors-for-calendar";
+
+const formatUtcDateKey = (date: Date) => {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 export default async function Home() {
+  const userService = new UserService();
+  const featuresByProject = await userService.getUserFeatures();
+
   const user = await getUser();
   if (!user) {
     return null;
   }
   const projectService = new ProjectService();
   const projects = await projectService.displayUserProjectsSummary(user.id);
+  const calendarByDay = Object.values(featuresByProject)
+    .flat()
+    .reduce<
+      Record<
+        string,
+        {
+          day: string;
+          events: Array<{
+            id: number;
+            name: string;
+            time: string;
+            datetime: string;
+            color: string;
+            featureId: number;
+            featureName: string;
+            projectId: string;
+            projectName: string;
+          }>;
+        }
+      >
+    >((acc, feature) => {
+      const day = formatUtcDateKey(feature.featureDeadline);
+
+      if (!acc[day]) {
+        acc[day] = { day, events: [] };
+      }
+
+      acc[day].events.push({
+        id: feature.featureId,
+        name: feature.featureName,
+        time: feature.projectName,
+        datetime: feature.featureDeadline.toISOString(),
+        color: getProjectColor(feature.projectId),
+        featureId: feature.featureId,
+        featureName: feature.featureName,
+        projectId: feature.projectId,
+        projectName: feature.projectName,
+      });
+
+      return acc;
+    }, {});
+
+  const calendarEvents = Object.values(calendarByDay).sort((a, b) =>
+    a.day.localeCompare(b.day),
+  );
 
   const projectsSummary = summUserProjects(projects);
   const accentColors = ["#39D5FF", "#8B5CF6", "#FF4D73", "#FF8A3D", "#FFD24A"];
@@ -93,6 +151,17 @@ export default async function Home() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="mb-14 md:mb-16">
+          <div className="mb-6">
+            <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
+              Calendar
+            </h2>
+          </div>
+          <div className="mx-auto h-[980px] max-w-[1100px] md:h-[1040px]">
+            <FullscreenCalendarDemo data={calendarEvents} />
           </div>
         </section>
 

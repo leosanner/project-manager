@@ -10,6 +10,17 @@ export class ProjectRepository {
     });
   }
 
+  async getTotalFeatures(userId: string) {
+    return await prisma.project.findMany({
+      where: {
+        authorId: userId,
+      },
+      include: {
+        features: true,
+      },
+    });
+  }
+
   async createProject(projectData: ProjectUncheckedCreateInput) {
     await prisma.project.create({
       data: projectData,
