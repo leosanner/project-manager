@@ -40,6 +40,8 @@ export default async function Home() {
             color: string;
             featureId: number;
             featureName: string;
+            projectId: string;
+            projectName: string;
           }>;
         }
       >
@@ -58,6 +60,8 @@ export default async function Home() {
         color: getProjectColor(feature.projectId),
         featureId: feature.featureId,
         featureName: feature.featureName,
+        projectId: feature.projectId,
+        projectName: feature.projectName,
       });
 
       return acc;

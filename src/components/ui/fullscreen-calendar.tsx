@@ -35,6 +35,8 @@ export interface Event {
   color?: string;
   featureId?: number | string;
   featureName?: string;
+  projectId?: string;
+  projectName?: string;
 }
 
 export interface CalendarData {
@@ -52,6 +54,11 @@ type FeatureGroup = {
   color?: string;
   events: Event[];
 };
+
+const normalizeGroupToken = (value?: string | number) =>
+  String(value ?? "")
+    .trim()
+    .toLowerCase();
 
 const colStartClasses = [
   "",
@@ -93,12 +100,20 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
 
   function groupEventsByFeature(events: Event[]): FeatureGroup[] {
     const grouped = events.reduce<Record<string, FeatureGroup>>((acc, event) => {
-      const groupId = String(event.featureId ?? event.id);
+      const projectIdToken = normalizeGroupToken(event.projectId);
+      const projectNameToken = normalizeGroupToken(event.projectName ?? event.time);
+      const fallbackColorToken = normalizeGroupToken(event.color);
+
+      const groupId =
+        projectIdToken ||
+        projectNameToken ||
+        fallbackColorToken ||
+        normalizeGroupToken(event.id);
 
       if (!acc[groupId]) {
         acc[groupId] = {
           id: groupId,
-          name: event.featureName ?? event.name,
+          name: event.projectName ?? event.time ?? "Project",
           color: event.color,
           events: [],
         };
@@ -120,8 +135,11 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
   }
 
   function getDayFeatureGroups(day: Date) {
-    const dayData = data.find((eventDate) => isSameDay(eventDate.day, day));
-    return dayData ? groupEventsByFeature(dayData.events) : [];
+    const dayEvents = data
+      .filter((eventDate) => isSameDay(eventDate.day, day))
+      .flatMap((eventDate) => eventDate.events);
+
+    return dayEvents.length > 0 ? groupEventsByFeature(dayEvents) : [];
   }
 
   return (
@@ -251,7 +269,7 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                       <time dateTime={format(day, "yyyy-MM-dd")}>{format(day, "d")}</time>
                     </button>
                   </header>
-                  <div className="flex-1 space-y-2.5 p-2.5">
+                  <div className="relative flex-1 space-y-2.5 p-2.5">
                     {featureGroups.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {featureGroups.map((featureGroup) => (
@@ -263,7 +281,7 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                               toggleFeatureEvents(day, featureGroup.id);
                             }}
                             className={cn(
-                              "flex h-3.5 w-3.5 items-center justify-center rounded-full border border-white/20 transition-transform hover:scale-110",
+                              "flex h-5 min-w-5 items-center justify-center rounded-full border border-white/20 px-1 text-[10px] font-semibold text-white transition-transform hover:scale-110",
                               expandedFeatureId === featureGroup.id && "scale-110 border-white/50",
                             )}
                             style={
@@ -271,31 +289,39 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                                 ? { backgroundColor: featureGroup.color }
                                 : undefined
                             }
-                            aria-label={`Expandir eventos da feature ${featureGroup.name}`}
-                            title={`${featureGroup.name} (${featureGroup.events.length})`}
-                          />
+                            aria-label={`Expandir features do projeto ${featureGroup.name}`}
+                            title={`${featureGroup.name} (${featureGroup.events.length} features)`}
+                          >
+                            {featureGroup.events.length}
+                          </button>
                         ))}
                       </div>
                     )}
                     {expandedFeature && (
-                      <div
-                        className="space-y-1 rounded-lg border bg-muted/50 p-2"
-                        style={
-                          expandedFeature.color
-                            ? {
-                                borderColor: expandedFeature.color,
-                                backgroundColor: `${expandedFeature.color}1A`,
-                              }
-                            : undefined
-                        }
-                      >
-                        <p className="truncate text-xs font-semibold">{expandedFeature.name}</p>
-                        {expandedFeature.events.map((event) => (
-                          <div key={event.id} className="text-xs leading-tight">
-                            <p className="truncate font-medium">{event.name}</p>
-                            <p className="text-muted-foreground">{event.time}</p>
+                      <div className="pointer-events-none absolute inset-x-2 top-14 z-30">
+                        <div
+                          className="pointer-events-auto space-y-2 rounded-lg border bg-[#111111] p-3 shadow-lg"
+                          style={
+                            expandedFeature.color
+                              ? {
+                                  borderColor: expandedFeature.color,
+                                  backgroundColor: `${expandedFeature.color}1A`,
+                                }
+                              : undefined
+                          }
+                        >
+                          <p className="text-xs font-semibold">
+                            Projeto: {expandedFeature.name}
+                          </p>
+                          <div className="space-y-1">
+                            <p className="text-xs font-semibold">Features:</p>
+                            {expandedFeature.events.map((event) => (
+                              <p key={event.id} className="truncate text-xs text-muted-foreground">
+                                {event.name}
+                              </p>
+                            ))}
                           </div>
-                        ))}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -357,7 +383,7 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                               toggleFeatureEvents(day, featureGroup.id);
                             }}
                             className={cn(
-                              "h-2.5 w-2.5 rounded-full border border-white/20 transition-transform",
+                              "flex h-4 min-w-4 items-center justify-center rounded-full border border-white/20 px-0.5 text-[9px] font-semibold text-white transition-transform",
                               expandedFeatureId === featureGroup.id &&
                                 "scale-110 border-white/50",
                             )}
@@ -366,33 +392,46 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                                 ? { backgroundColor: featureGroup.color }
                                 : undefined
                             }
-                            aria-label={`Expandir eventos da feature ${featureGroup.name}`}
-                          />
+                            aria-label={`Expandir features do projeto ${featureGroup.name}`}
+                          >
+                            {featureGroup.events.length}
+                          </button>
                         ))}
                       </div>
-                      {expandedFeature && (
-                        <div className="space-y-0.5 rounded border border-white/20 bg-muted/70 p-1">
-                          <p className="truncate text-[10px] font-semibold">
-                            {expandedFeature.name}
+                    {expandedFeature && (
+                      <div
+                        className="space-y-1 rounded-md border border-white/20 bg-[#111111] p-2"
+                        style={
+                          expandedFeature.color
+                            ? {
+                                borderColor: expandedFeature.color,
+                                backgroundColor: `${expandedFeature.color}1A`,
+                              }
+                            : undefined
+                        }
+                      >
+                        <p className="truncate text-[10px] font-semibold">
+                          Projeto: {expandedFeature.name}
+                        </p>
+                        <p className="text-[10px] font-semibold">Features:</p>
+                        {expandedFeature.events.slice(0, 3).map((event) => (
+                          <p
+                            key={event.id}
+                            className="truncate text-[10px] text-muted-foreground"
+                          >
+                            {event.name}
                           </p>
-                          {expandedFeature.events.slice(0, 2).map((event) => (
-                            <p
-                              key={event.id}
-                              className="truncate text-[10px] text-muted-foreground"
-                            >
-                              {event.name}
-                            </p>
-                          ))}
-                          {expandedFeature.events.length > 2 && (
-                            <p className="text-[10px] text-muted-foreground">
-                              +{expandedFeature.events.length - 2} more
-                            </p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
+                        ))}
+                        {expandedFeature.events.length > 3 && (
+                          <p className="text-[10px] text-muted-foreground">
+                            +{expandedFeature.events.length - 3}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
               );
             })}
           </div>
