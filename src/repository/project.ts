@@ -10,6 +10,14 @@ export class ProjectRepository {
     });
   }
 
+  async deleteProject(projectId: string) {
+    return await prisma.project.delete({
+      where: {
+        id: projectId,
+      },
+    });
+  }
+
   async getTotalFeatures(userId: string) {
     return await prisma.project.findMany({
       where: {
