@@ -20,6 +20,21 @@ export default function NewFeatureForm({ projectId }: NewFeatureFormProps) {
   const [deadline, setDeadline] = useState("");
   const [selectedTime, setSelectedTime] = useState<string | undefined>();
 
+  const buildLocalDeadline = (date: Date, time: string) => {
+    const timeMatch = time.match(/^(\d{2}):(\d{2})\s(AM|PM)$/);
+
+    if (!timeMatch) {
+      return "";
+    }
+
+    const [, hourString, minuteString, period] = timeMatch;
+    const hour12 = Number(hourString);
+    const minute = Number(minuteString);
+    const hour24 = (hour12 % 12) + (period === "PM" ? 12 : 0);
+
+    return `${format(date, "yyyy-MM-dd")}T${String(hour24).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00`;
+  };
+
   return (
     <section className="min-h-screen bg-black px-4 py-10">
       <div className="mx-auto w-full max-w-2xl">
@@ -66,12 +81,12 @@ export default function NewFeatureForm({ projectId }: NewFeatureFormProps) {
               </label>
               <CalendarScheduler
                 onConfirm={(value) => {
-                  if (!value.date) {
+                  if (!value.date || !value.time) {
                     setDeadline("");
                     setSelectedTime(undefined);
                     return;
                   }
-                  setDeadline(format(value.date, "yyyy-MM-dd"));
+                  setDeadline(buildLocalDeadline(value.date, value.time));
                   setSelectedTime(value.time);
                 }}
               />
