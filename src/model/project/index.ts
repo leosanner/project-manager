@@ -27,6 +27,14 @@ export class ProjectService {
     return await this.projectRepository.createProject(projectData);
   }
 
+  async deleteProject(projectId: string, userId: string) {
+    const userProjects = await this.getUserProjectsIds(userId);
+
+    if (userProjects.includes(projectId)) {
+      return await this.projectRepository.deleteProject(projectId);
+    }
+  }
+
   async getProjectFeatures(projectId: string) {
     return await this.projectRepository.getProjectFeatures(projectId);
   }

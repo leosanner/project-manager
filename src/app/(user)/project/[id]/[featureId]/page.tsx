@@ -4,6 +4,7 @@ import { ProjectService } from "@/model/project";
 import { TaskList, type Task } from "@/components/ui/task-list";
 import { redirect } from "next/navigation";
 import NewTaskForm from "./new-task-form";
+import DeleteFeatureForm from "./delete-feature-form";
 
 type PageProps = {
   params: Promise<{
@@ -52,13 +53,16 @@ export default async function Page({ params }: PageProps) {
   return (
     <section className="min-h-screen bg-black px-4 py-10">
       <div className="mx-auto w-full max-w-4xl space-y-8">
-        <header>
-          <h1 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
-            Feature #{currentFeature.id}
-          </h1>
-          <p className="mt-2 text-sm text-[#C7CCD6] md:text-base">
-            {currentFeature.description}
-          </p>
+        <header className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
+              Feature #{currentFeature.id}
+            </h1>
+            <p className="mt-2 text-sm text-[#C7CCD6] md:text-base">
+              {currentFeature.description}
+            </p>
+          </div>
+          <DeleteFeatureForm projectId={id} featureId={parsedFeatureId} />
         </header>
 
         <NewTaskForm projectId={id} featureId={parsedFeatureId} />

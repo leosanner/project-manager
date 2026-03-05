@@ -1,6 +1,7 @@
 import { ProjectService } from "@/model/project";
 import { TaskList, type Task } from "@/components/ui/task-list";
 import Link from "next/link";
+import DeleteProjectForm from "./delete-project-form";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -32,12 +33,15 @@ export default async function Page({ params }: PageProps) {
             <h1 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
               Project Details
             </h1>
-            <Link
-              href={`/project/${id}/new-feature`}
-              className="inline-flex rounded-md border border-cyan-400/60 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
-            >
-              Create Feature
-            </Link>
+            <div className="flex items-center gap-3">
+              <DeleteProjectForm projectId={id} />
+              <Link
+                href={`/project/${id}/new-feature`}
+                className="inline-flex rounded-md border border-cyan-400/60 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
+              >
+                Create Feature
+              </Link>
+            </div>
           </div>
         </div>
 
