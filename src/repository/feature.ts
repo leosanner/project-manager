@@ -13,6 +13,14 @@ export class FeatureRepository {
     });
   }
 
+  async deleteFeature(featureId: number) {
+    return await prisma.feature.delete({
+      where: {
+        id: featureId,
+      },
+    });
+  }
+
   async getFeatureTasks(featureId: number) {
     return await prisma.feature
       .findUnique({ where: { id: featureId } })
