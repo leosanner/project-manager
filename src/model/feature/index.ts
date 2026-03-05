@@ -1,7 +1,6 @@
 import { FeatureRepository } from "@/repository/feature";
 import { FeatureUncheckedCreateInput } from "../../../generated/prisma/models";
 import { TaskRepository } from "@/repository/task";
-import { string } from "zod";
 import { ProjectRepository } from "@/repository/project";
 
 export class FeatureService {
@@ -34,11 +33,13 @@ export class FeatureService {
   }
 
   async deleteFeature(featureId: number, authorId: string) {
-    const totalFeatures =
+    const featuresByProject =
       await this.projectRepository.getTotalFeatures(authorId);
 
-    for (const feature of totalFeatures) {
-      if (feature.id == String(featureId)) {
+    for (const project of featuresByProject) {
+      const featureIds = project.features.map((feature) => feature.id);
+
+      if (featureIds.includes(featureId)) {
         return this.featureRepository.deleteFeature(featureId);
       }
     }
