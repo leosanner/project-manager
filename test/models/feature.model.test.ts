@@ -44,4 +44,47 @@ describe("FeatureModel", () => {
     expect(createFeatureMock).toHaveBeenCalledWith(input);
     expect(result).toEqual({ id: 10 });
   });
+
+  it("deletes feature when it belongs to one of the user's projects", async () => {
+    const model = new FeatureService();
+    const getTotalFeaturesMock = jest.fn().mockResolvedValue([
+      { id: "project-1", features: [{ id: 10 }, { id: 11 }] },
+      { id: "project-2", features: [{ id: 20 }] },
+    ]);
+    const deleteFeatureMock = jest.fn().mockResolvedValue({ id: 11 });
+
+    model.projectRepository = {
+      getTotalFeatures: getTotalFeaturesMock,
+    } as never;
+    model.featureRepository = {
+      deleteFeature: deleteFeatureMock,
+    } as never;
+
+    const result = await model.deleteFeature(11, "user-1");
+
+    expect(getTotalFeaturesMock).toHaveBeenCalledWith("user-1");
+    expect(deleteFeatureMock).toHaveBeenCalledWith(11);
+    expect(result).toEqual({ id: 11 });
+  });
+
+  it("does not delete feature when it is outside the user's scope", async () => {
+    const model = new FeatureService();
+    const getTotalFeaturesMock = jest.fn().mockResolvedValue([
+      { id: "project-1", features: [{ id: 10 }] },
+    ]);
+    const deleteFeatureMock = jest.fn();
+
+    model.projectRepository = {
+      getTotalFeatures: getTotalFeaturesMock,
+    } as never;
+    model.featureRepository = {
+      deleteFeature: deleteFeatureMock,
+    } as never;
+
+    const result = await model.deleteFeature(999, "user-1");
+
+    expect(getTotalFeaturesMock).toHaveBeenCalledWith("user-1");
+    expect(deleteFeatureMock).not.toHaveBeenCalled();
+    expect(result).toBeUndefined();
+  });
 });

@@ -32,6 +32,45 @@ describe("ProjectService", () => {
     expect(createProjectMock).toHaveBeenCalledWith(input);
   });
 
+  it("deletes a project when it belongs to the user", async () => {
+    const service = new ProjectService();
+    const getUserProjectsMock = jest.fn().mockResolvedValue([
+      { id: "project-1" },
+      { id: "project-2" },
+    ]);
+    const deleteProjectMock = jest.fn().mockResolvedValue({ id: "project-1" });
+
+    service.projectRepository = {
+      getUserProjects: getUserProjectsMock,
+      deleteProject: deleteProjectMock,
+    } as never;
+
+    const result = await service.deleteProject("project-1", "user-1");
+
+    expect(getUserProjectsMock).toHaveBeenCalledWith("user-1");
+    expect(deleteProjectMock).toHaveBeenCalledWith("project-1");
+    expect(result).toEqual({ id: "project-1" });
+  });
+
+  it("does not delete a project that does not belong to the user", async () => {
+    const service = new ProjectService();
+    const getUserProjectsMock = jest.fn().mockResolvedValue([
+      { id: "project-2" },
+    ]);
+    const deleteProjectMock = jest.fn();
+
+    service.projectRepository = {
+      getUserProjects: getUserProjectsMock,
+      deleteProject: deleteProjectMock,
+    } as never;
+
+    const result = await service.deleteProject("project-1", "user-1");
+
+    expect(getUserProjectsMock).toHaveBeenCalledWith("user-1");
+    expect(deleteProjectMock).not.toHaveBeenCalled();
+    expect(result).toBeUndefined();
+  });
+
   it("builds project summary with feature and task totals", async () => {
     const now = new Date("2026-02-27T10:00:00.000Z");
     const service = new ProjectService();
