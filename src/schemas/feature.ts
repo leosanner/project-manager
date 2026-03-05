@@ -8,15 +8,7 @@ const setDayInterval = (numDays: number) => {
 
 const coerceDeadlineAsLocalDate = (value: unknown) => {
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
-    return new Date(
-      value.getFullYear(),
-      value.getMonth(),
-      value.getDate(),
-      12,
-      0,
-      0,
-      0,
-    );
+    return value;
   }
 
   if (typeof value === "string") {
@@ -27,17 +19,26 @@ const coerceDeadlineAsLocalDate = (value: unknown) => {
       return new Date(Number(year), Number(month) - 1, Number(day), 12, 0, 0, 0);
     }
 
-    const parsed = new Date(value);
-    if (!Number.isNaN(parsed.getTime())) {
+    const localDateTimeMatch = value.match(
+      /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/,
+    );
+
+    if (localDateTimeMatch) {
+      const [, year, month, day, hour, minute, second] = localDateTimeMatch;
       return new Date(
-        parsed.getFullYear(),
-        parsed.getMonth(),
-        parsed.getDate(),
-        12,
-        0,
-        0,
+        Number(year),
+        Number(month) - 1,
+        Number(day),
+        Number(hour),
+        Number(minute),
+        Number(second ?? "0"),
         0,
       );
+    }
+
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed;
     }
   }
 
@@ -58,7 +59,7 @@ export const createFeatureSchema = (numDays: number) => {
       .default(setDayInterval(numDays))
       .refine((value) => value > new Date(), {
         path: ["date"],
-        message: "Date must be greater than the actual moment",
+        message: "Deadline must be in the future",
       }),
     projectId: z.uuid("Project ID must be a valid UUID"),
   });

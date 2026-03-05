@@ -9,27 +9,18 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { cn } from "@/lib/utils";
 
 export interface CalendarSchedulerProps {
-  timeSlots?: string[];
   onConfirm?: (value: { date?: Date; time?: string }) => void;
 }
 
 function CalendarScheduler({
-  timeSlots = [
-    "08:00 AM",
-    "09:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "12:00 PM",
-    "01:00 PM",
-    "02:00 PM",
-    "03:00 PM",
-    "04:00 PM",
-    "05:00 PM",
-  ],
   onConfirm,
 }: CalendarSchedulerProps) {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
-  const [time, setTime] = React.useState<string | undefined>();
+  const [hour, setHour] = React.useState("12");
+  const [minute, setMinute] = React.useState("00");
+  const [period, setPeriod] = React.useState<"AM" | "PM">("PM");
+
+  const formattedTime = `${hour}:${minute} ${period}`;
 
   return (
     <div>
@@ -45,22 +36,59 @@ function CalendarScheduler({
             <Calendar mode="single" selected={date} onSelect={setDate} className="rounded-md" />
           </div>
 
-          <div className="max-h-[320px] flex-1 overflow-y-auto rounded-md border border-[rgba(255,255,255,0.18)] p-2">
-            <p className="mb-2 text-sm font-medium text-muted-foreground">Pick a time (optional)</p>
-            <div className="grid grid-cols-2 gap-2">
-              {timeSlots.map((slot) => (
-                <Button
-                  key={slot}
-                  variant={time === slot ? "default" : "outline"}
-                  size="sm"
-                  className={cn("w-full", time === slot && "ring-2 ring-primary")}
-                  onClick={() => setTime(slot)}
-                  type="button"
-                >
-                  {slot}
-                </Button>
-              ))}
+          <div className="flex-1 rounded-md border border-[rgba(255,255,255,0.18)] p-3">
+            <p className="mb-2 text-sm font-medium text-muted-foreground">Select time</p>
+            <div className="grid grid-cols-3 gap-2">
+              <select
+                aria-label="Hour"
+                value={hour}
+                onChange={(event) => setHour(event.target.value)}
+                className={cn(
+                  "h-9 rounded-md border border-[rgba(255,255,255,0.18)] bg-black px-2 text-sm text-white",
+                  "focus:outline-none focus:ring-2 focus:ring-primary",
+                )}
+              >
+                {Array.from({ length: 12 }, (_, index) => {
+                  const value = String(index + 1).padStart(2, "0");
+                  return (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  );
+                })}
+              </select>
+              <select
+                aria-label="Minute"
+                value={minute}
+                onChange={(event) => setMinute(event.target.value)}
+                className={cn(
+                  "h-9 rounded-md border border-[rgba(255,255,255,0.18)] bg-black px-2 text-sm text-white",
+                  "focus:outline-none focus:ring-2 focus:ring-primary",
+                )}
+              >
+                {Array.from({ length: 60 }, (_, index) => {
+                  const value = String(index).padStart(2, "0");
+                  return (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  );
+                })}
+              </select>
+              <select
+                aria-label="Period"
+                value={period}
+                onChange={(event) => setPeriod(event.target.value as "AM" | "PM")}
+                className={cn(
+                  "h-9 rounded-md border border-[rgba(255,255,255,0.18)] bg-black px-2 text-sm text-white",
+                  "focus:outline-none focus:ring-2 focus:ring-primary",
+                )}
+              >
+                <option value="AM">AM</option>
+                <option value="PM">PM</option>
+              </select>
             </div>
+            <p className="mt-3 text-xs text-[#7E8591]">Selected time: {formattedTime}</p>
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
@@ -70,12 +98,19 @@ function CalendarScheduler({
             type="button"
             onClick={() => {
               setDate(undefined);
-              setTime(undefined);
+              setHour("12");
+              setMinute("00");
+              setPeriod("PM");
             }}
           >
             Reset
           </Button>
-          <Button size="sm" type="button" onClick={() => onConfirm?.({ date, time })} disabled={!date}>
+          <Button
+            size="sm"
+            type="button"
+            onClick={() => onConfirm?.({ date, time: formattedTime })}
+            disabled={!date}
+          >
             Confirm
           </Button>
         </CardFooter>
