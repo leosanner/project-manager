@@ -15,7 +15,25 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  ADMIN
+  USER
+}
 
+enum PlanType {
+  FREE
+  PREMIUM
+  PRO
+}
+
+model Plan {
+  id            String   @id @default(uuid())
+  plantype      PlanType @default(FREE)
+  maxProjects   Int      @default(5)
+  maxFeatures   Int      @default(15)
+  maxDocuments  Int      @default(5)
+  price         Float    @default(0)
+}
 
 model User {
   id            String    @id
@@ -29,6 +47,7 @@ model User {
   accounts      Account[]
   projects      Project[]
   tasks         Task[]
+  role          Role @default(USER)
 
   @@unique([email])
   @@map("user")
