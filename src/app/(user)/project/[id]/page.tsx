@@ -1,5 +1,5 @@
 import { ProjectService } from "@/model/project";
-import { TaskList, type Task } from "@/components/ui/task-list";
+import { TaskList, type Feature } from "@/components/ui/task-list";
 import Link from "next/link";
 import DeleteProjectForm from "./delete-project-form";
 
@@ -9,21 +9,25 @@ type PageProps = {
 
 export default async function Page({ params }: PageProps) {
   const { id } = await params;
-  const projectModel = new ProjectService();
-  const projectFeatures = await projectModel.getProjectFeatures(id);
-  const featureTasks: Task[] =
-    projectFeatures?.map((feature) => ({
-      id: feature.id,
-      task: feature.description,
-      category: "Feature",
-      status: feature.completed ? "Completed" : "In Progress",
-      dueDate: feature.deadline.toLocaleDateString("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      }),
-      href: `/project/${id}/${feature.id}`,
-    })) ?? [];
+  const projectService = new ProjectService();
+  const projectFeatures = (await projectService.getProjectFeatures(id)) ?? [];
+
+  const featureTasks: Feature[] = projectFeatures.map((feature) => ({
+    id: feature.id,
+    name: feature.description,
+    completed: feature.completed,
+    updatedAt: feature.updatedAt.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    }),
+    deadline: feature.deadline.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    }),
+    href: `/project/${id}/${feature.id}`,
+  }));
 
   return (
     <section className="min-h-screen bg-black px-4 py-10">
@@ -46,7 +50,7 @@ export default async function Page({ params }: PageProps) {
         </div>
 
         <div className="mt-10">
-          <TaskList title="Project Features" tasks={featureTasks} />
+          <TaskList title="Project Features" features={featureTasks} />
         </div>
       </div>
     </section>
