@@ -8,6 +8,7 @@ import {
   BoldItalicUnderlineToggles,
   CreateLink,
   headingsPlugin,
+  ListsToggle,
   listsPlugin,
   markdownShortcutPlugin,
   MDXEditor,
@@ -124,6 +125,7 @@ export default function FeatureMarkdownEditor({
                   <>
                     <UndoRedo />
                     <BoldItalicUnderlineToggles />
+                    <ListsToggle options={["bullet", "number", "check"]} />
                     <BlockTypeSelect />
                     <CreateLink />
                   </>
