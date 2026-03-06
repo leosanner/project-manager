@@ -28,20 +28,38 @@ export class FeatureService {
     );
   }
 
+  async displayMarkdownContent(authorId: string, featureId: number) {
+    const feature = await this.findFeatureByUser(authorId, featureId);
+    return feature?.markdownContent;
+  }
+
+  async updateMarkdownContent(
+    markdownContent: string,
+    featureId: number,
+    authorId: string,
+  ) {
+    const feature = await this.findFeatureByUser(authorId, featureId);
+    if (feature) {
+      return await this.featureRepository.updateMarkdown(
+        markdownContent,
+        featureId,
+      );
+    }
+  }
+
   async createFeature(featureData: FeatureUncheckedCreateInput) {
     return await this.featureRepository.createFeature(featureData);
   }
 
-  async deleteFeature(featureId: number, authorId: string) {
-    const featuresByProject =
-      await this.projectRepository.getTotalFeatures(authorId);
+  async deleteFeature(authorId: string, featureId: number) {
+    const feature = await this.findFeatureByUser(authorId, featureId);
 
-    for (const project of featuresByProject) {
-      const featureIds = project.features.map((feature) => feature.id);
-
-      if (featureIds.includes(featureId)) {
-        return this.featureRepository.deleteFeature(featureId);
-      }
+    if (feature) {
+      return await this.featureRepository.deleteFeature(featureId);
     }
+  }
+
+  private async findFeatureByUser(authorId: string, featureId: number) {
+    return await this.featureRepository.getFeatureByUser(authorId, featureId);
   }
 }

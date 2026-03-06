@@ -1129,7 +1129,8 @@ export const FeatureScalarFieldEnum = {
   updatedAt: 'updatedAt',
   completed: 'completed',
   deadline: 'deadline',
-  projectId: 'projectId'
+  projectId: 'projectId',
+  markdownContent: 'markdownContent'
 } as const
 
 export type FeatureScalarFieldEnum = (typeof FeatureScalarFieldEnum)[keyof typeof FeatureScalarFieldEnum]
