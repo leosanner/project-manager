@@ -23,7 +23,7 @@ export default function DeleteFeatureForm({
       action={formAction}
       onSubmit={(event) => {
         const confirmed = window.confirm(
-          "Delete this feature? All tasks inside it will be deleted.",
+          "Delete this feature and its markdown content?",
         );
 
         if (!confirmed) {

@@ -13,6 +13,28 @@ export class FeatureRepository {
     });
   }
 
+  async getFeatureByUser(userId: string, featureId: number) {
+    return await prisma.feature.findFirst({
+      where: {
+        id: featureId,
+        project: {
+          authorId: userId,
+        },
+      },
+    });
+  }
+
+  async updateMarkdown(markdownContent: string, featureId: number) {
+    return await prisma.feature.update({
+      where: {
+        id: featureId,
+      },
+      data: {
+        markdownContent,
+      },
+    });
+  }
+
   async deleteFeature(featureId: number) {
     return await prisma.feature.delete({
       where: {

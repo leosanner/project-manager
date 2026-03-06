@@ -42,6 +42,7 @@ export type FeatureMinAggregateOutputType = {
   completed: boolean | null
   deadline: Date | null
   projectId: string | null
+  markdownContent: string | null
 }
 
 export type FeatureMaxAggregateOutputType = {
@@ -52,6 +53,7 @@ export type FeatureMaxAggregateOutputType = {
   completed: boolean | null
   deadline: Date | null
   projectId: string | null
+  markdownContent: string | null
 }
 
 export type FeatureCountAggregateOutputType = {
@@ -62,6 +64,7 @@ export type FeatureCountAggregateOutputType = {
   completed: number
   deadline: number
   projectId: number
+  markdownContent: number
   _all: number
 }
 
@@ -82,6 +85,7 @@ export type FeatureMinAggregateInputType = {
   completed?: true
   deadline?: true
   projectId?: true
+  markdownContent?: true
 }
 
 export type FeatureMaxAggregateInputType = {
@@ -92,6 +96,7 @@ export type FeatureMaxAggregateInputType = {
   completed?: true
   deadline?: true
   projectId?: true
+  markdownContent?: true
 }
 
 export type FeatureCountAggregateInputType = {
@@ -102,6 +107,7 @@ export type FeatureCountAggregateInputType = {
   completed?: true
   deadline?: true
   projectId?: true
+  markdownContent?: true
   _all?: true
 }
 
@@ -199,6 +205,7 @@ export type FeatureGroupByOutputType = {
   completed: boolean
   deadline: Date
   projectId: string
+  markdownContent: string
   _count: FeatureCountAggregateOutputType | null
   _avg: FeatureAvgAggregateOutputType | null
   _sum: FeatureSumAggregateOutputType | null
@@ -232,6 +239,7 @@ export type FeatureWhereInput = {
   completed?: Prisma.BoolFilter<"Feature"> | boolean
   deadline?: Prisma.DateTimeFilter<"Feature"> | Date | string
   projectId?: Prisma.StringFilter<"Feature"> | string
+  markdownContent?: Prisma.StringFilter<"Feature"> | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   tasks?: Prisma.TaskListRelationFilter
 }
@@ -244,6 +252,7 @@ export type FeatureOrderByWithRelationInput = {
   completed?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  markdownContent?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
 }
@@ -259,6 +268,7 @@ export type FeatureWhereUniqueInput = Prisma.AtLeast<{
   completed?: Prisma.BoolFilter<"Feature"> | boolean
   deadline?: Prisma.DateTimeFilter<"Feature"> | Date | string
   projectId?: Prisma.StringFilter<"Feature"> | string
+  markdownContent?: Prisma.StringFilter<"Feature"> | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   tasks?: Prisma.TaskListRelationFilter
 }, "id">
@@ -271,6 +281,7 @@ export type FeatureOrderByWithAggregationInput = {
   completed?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  markdownContent?: Prisma.SortOrder
   _count?: Prisma.FeatureCountOrderByAggregateInput
   _avg?: Prisma.FeatureAvgOrderByAggregateInput
   _max?: Prisma.FeatureMaxOrderByAggregateInput
@@ -289,6 +300,7 @@ export type FeatureScalarWhereWithAggregatesInput = {
   completed?: Prisma.BoolWithAggregatesFilter<"Feature"> | boolean
   deadline?: Prisma.DateTimeWithAggregatesFilter<"Feature"> | Date | string
   projectId?: Prisma.StringWithAggregatesFilter<"Feature"> | string
+  markdownContent?: Prisma.StringWithAggregatesFilter<"Feature"> | string
 }
 
 export type FeatureCreateInput = {
@@ -297,6 +309,7 @@ export type FeatureCreateInput = {
   updatedAt?: Date | string
   completed?: boolean
   deadline: Date | string
+  markdownContent?: string
   project: Prisma.ProjectCreateNestedOneWithoutFeaturesInput
   tasks?: Prisma.TaskCreateNestedManyWithoutFeatureInput
 }
@@ -309,6 +322,7 @@ export type FeatureUncheckedCreateInput = {
   completed?: boolean
   deadline: Date | string
   projectId: string
+  markdownContent?: string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutFeatureInput
 }
 
@@ -318,6 +332,7 @@ export type FeatureUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  markdownContent?: Prisma.StringFieldUpdateOperationsInput | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutFeaturesNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutFeatureNestedInput
 }
@@ -330,6 +345,7 @@ export type FeatureUncheckedUpdateInput = {
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  markdownContent?: Prisma.StringFieldUpdateOperationsInput | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutFeatureNestedInput
 }
 
@@ -341,6 +357,7 @@ export type FeatureCreateManyInput = {
   completed?: boolean
   deadline: Date | string
   projectId: string
+  markdownContent?: string
 }
 
 export type FeatureUpdateManyMutationInput = {
@@ -349,6 +366,7 @@ export type FeatureUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  markdownContent?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type FeatureUncheckedUpdateManyInput = {
@@ -359,6 +377,7 @@ export type FeatureUncheckedUpdateManyInput = {
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  markdownContent?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type FeatureListRelationFilter = {
@@ -379,6 +398,7 @@ export type FeatureCountOrderByAggregateInput = {
   completed?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  markdownContent?: Prisma.SortOrder
 }
 
 export type FeatureAvgOrderByAggregateInput = {
@@ -393,6 +413,7 @@ export type FeatureMaxOrderByAggregateInput = {
   completed?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  markdownContent?: Prisma.SortOrder
 }
 
 export type FeatureMinOrderByAggregateInput = {
@@ -403,6 +424,7 @@ export type FeatureMinOrderByAggregateInput = {
   completed?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  markdownContent?: Prisma.SortOrder
 }
 
 export type FeatureSumOrderByAggregateInput = {
@@ -484,6 +506,7 @@ export type FeatureCreateWithoutProjectInput = {
   updatedAt?: Date | string
   completed?: boolean
   deadline: Date | string
+  markdownContent?: string
   tasks?: Prisma.TaskCreateNestedManyWithoutFeatureInput
 }
 
@@ -494,6 +517,7 @@ export type FeatureUncheckedCreateWithoutProjectInput = {
   updatedAt?: Date | string
   completed?: boolean
   deadline: Date | string
+  markdownContent?: string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutFeatureInput
 }
 
@@ -534,6 +558,7 @@ export type FeatureScalarWhereInput = {
   completed?: Prisma.BoolFilter<"Feature"> | boolean
   deadline?: Prisma.DateTimeFilter<"Feature"> | Date | string
   projectId?: Prisma.StringFilter<"Feature"> | string
+  markdownContent?: Prisma.StringFilter<"Feature"> | string
 }
 
 export type FeatureCreateWithoutTasksInput = {
@@ -542,6 +567,7 @@ export type FeatureCreateWithoutTasksInput = {
   updatedAt?: Date | string
   completed?: boolean
   deadline: Date | string
+  markdownContent?: string
   project: Prisma.ProjectCreateNestedOneWithoutFeaturesInput
 }
 
@@ -553,6 +579,7 @@ export type FeatureUncheckedCreateWithoutTasksInput = {
   completed?: boolean
   deadline: Date | string
   projectId: string
+  markdownContent?: string
 }
 
 export type FeatureCreateOrConnectWithoutTasksInput = {
@@ -577,6 +604,7 @@ export type FeatureUpdateWithoutTasksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  markdownContent?: Prisma.StringFieldUpdateOperationsInput | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutFeaturesNestedInput
 }
 
@@ -588,6 +616,7 @@ export type FeatureUncheckedUpdateWithoutTasksInput = {
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  markdownContent?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type FeatureCreateManyProjectInput = {
@@ -597,6 +626,7 @@ export type FeatureCreateManyProjectInput = {
   updatedAt?: Date | string
   completed?: boolean
   deadline: Date | string
+  markdownContent?: string
 }
 
 export type FeatureUpdateWithoutProjectInput = {
@@ -605,6 +635,7 @@ export type FeatureUpdateWithoutProjectInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  markdownContent?: Prisma.StringFieldUpdateOperationsInput | string
   tasks?: Prisma.TaskUpdateManyWithoutFeatureNestedInput
 }
 
@@ -615,6 +646,7 @@ export type FeatureUncheckedUpdateWithoutProjectInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  markdownContent?: Prisma.StringFieldUpdateOperationsInput | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutFeatureNestedInput
 }
 
@@ -625,6 +657,7 @@ export type FeatureUncheckedUpdateManyWithoutProjectInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  markdownContent?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -666,6 +699,7 @@ export type FeatureSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   completed?: boolean
   deadline?: boolean
   projectId?: boolean
+  markdownContent?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   tasks?: boolean | Prisma.Feature$tasksArgs<ExtArgs>
   _count?: boolean | Prisma.FeatureCountOutputTypeDefaultArgs<ExtArgs>
@@ -679,6 +713,7 @@ export type FeatureSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   completed?: boolean
   deadline?: boolean
   projectId?: boolean
+  markdownContent?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["feature"]>
 
@@ -690,6 +725,7 @@ export type FeatureSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   completed?: boolean
   deadline?: boolean
   projectId?: boolean
+  markdownContent?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["feature"]>
 
@@ -701,9 +737,10 @@ export type FeatureSelectScalar = {
   completed?: boolean
   deadline?: boolean
   projectId?: boolean
+  markdownContent?: boolean
 }
 
-export type FeatureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "createdAt" | "updatedAt" | "completed" | "deadline" | "projectId", ExtArgs["result"]["feature"]>
+export type FeatureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "createdAt" | "updatedAt" | "completed" | "deadline" | "projectId" | "markdownContent", ExtArgs["result"]["feature"]>
 export type FeatureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   tasks?: boolean | Prisma.Feature$tasksArgs<ExtArgs>
@@ -730,6 +767,7 @@ export type $FeaturePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     completed: boolean
     deadline: Date
     projectId: string
+    markdownContent: string
   }, ExtArgs["result"]["feature"]>
   composites: {}
 }
@@ -1162,6 +1200,7 @@ export interface FeatureFieldRefs {
   readonly completed: Prisma.FieldRef<"Feature", 'Boolean'>
   readonly deadline: Prisma.FieldRef<"Feature", 'DateTime'>
   readonly projectId: Prisma.FieldRef<"Feature", 'String'>
+  readonly markdownContent: Prisma.FieldRef<"Feature", 'String'>
 }
     
 

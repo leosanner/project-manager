@@ -1,6 +1,6 @@
 import { FeatureService } from "@/model/feature";
 
-describe("FeatureModel", () => {
+describe("FeatureService", () => {
   it("filters feature tasks by author", async () => {
     const model = new FeatureService();
     const getTasksByFeatureMock = jest.fn().mockResolvedValue([
@@ -45,46 +45,77 @@ describe("FeatureModel", () => {
     expect(result).toEqual({ id: 10 });
   });
 
-  it("deletes feature when it belongs to one of the user's projects", async () => {
+  it("returns markdown content when feature belongs to user", async () => {
     const model = new FeatureService();
-    const getTotalFeaturesMock = jest.fn().mockResolvedValue([
-      { id: "project-1", features: [{ id: 10 }, { id: 11 }] },
-      { id: "project-2", features: [{ id: 20 }] },
-    ]);
-    const deleteFeatureMock = jest.fn().mockResolvedValue({ id: 11 });
+    const getFeatureByUserMock = jest.fn().mockResolvedValue({
+      id: 10,
+      markdownContent: "# Hello",
+    });
 
-    model.projectRepository = {
-      getTotalFeatures: getTotalFeaturesMock,
-    } as never;
     model.featureRepository = {
-      deleteFeature: deleteFeatureMock,
+      getFeatureByUser: getFeatureByUserMock,
     } as never;
 
-    const result = await model.deleteFeature(11, "user-1");
+    const result = await model.displayMarkdownContent("user-1", 10);
 
-    expect(getTotalFeaturesMock).toHaveBeenCalledWith("user-1");
-    expect(deleteFeatureMock).toHaveBeenCalledWith(11);
-    expect(result).toEqual({ id: 11 });
+    expect(getFeatureByUserMock).toHaveBeenCalledWith("user-1", 10);
+    expect(result).toBe("# Hello");
   });
 
-  it("does not delete feature when it is outside the user's scope", async () => {
+  it("updates markdown when feature belongs to user", async () => {
     const model = new FeatureService();
-    const getTotalFeaturesMock = jest.fn().mockResolvedValue([
-      { id: "project-1", features: [{ id: 10 }] },
-    ]);
-    const deleteFeatureMock = jest.fn();
+    const getFeatureByUserMock = jest.fn().mockResolvedValue({ id: 10 });
+    const updateMarkdownMock = jest.fn().mockResolvedValue({
+      id: 10,
+      markdownContent: "## Updated",
+    });
 
-    model.projectRepository = {
-      getTotalFeatures: getTotalFeaturesMock,
-    } as never;
     model.featureRepository = {
+      getFeatureByUser: getFeatureByUserMock,
+      updateMarkdown: updateMarkdownMock,
+    } as never;
+
+    const result = await model.updateMarkdownContent("## Updated", 10, "user-1");
+
+    expect(getFeatureByUserMock).toHaveBeenCalledWith("user-1", 10);
+    expect(updateMarkdownMock).toHaveBeenCalledWith("## Updated", 10);
+    expect(result).toEqual({
+      id: 10,
+      markdownContent: "## Updated",
+    });
+  });
+
+  it("does not update markdown when feature is outside user scope", async () => {
+    const model = new FeatureService();
+    const getFeatureByUserMock = jest.fn().mockResolvedValue(null);
+    const updateMarkdownMock = jest.fn();
+
+    model.featureRepository = {
+      getFeatureByUser: getFeatureByUserMock,
+      updateMarkdown: updateMarkdownMock,
+    } as never;
+
+    const result = await model.updateMarkdownContent("## Updated", 999, "user-1");
+
+    expect(getFeatureByUserMock).toHaveBeenCalledWith("user-1", 999);
+    expect(updateMarkdownMock).not.toHaveBeenCalled();
+    expect(result).toBeUndefined();
+  });
+
+  it("deletes feature when it belongs to user", async () => {
+    const model = new FeatureService();
+    const getFeatureByUserMock = jest.fn().mockResolvedValue({ id: 11 });
+    const deleteFeatureMock = jest.fn().mockResolvedValue({ id: 11 });
+
+    model.featureRepository = {
+      getFeatureByUser: getFeatureByUserMock,
       deleteFeature: deleteFeatureMock,
     } as never;
 
-    const result = await model.deleteFeature(999, "user-1");
+    const result = await model.deleteFeature("user-1", 11);
 
-    expect(getTotalFeaturesMock).toHaveBeenCalledWith("user-1");
-    expect(deleteFeatureMock).not.toHaveBeenCalled();
-    expect(result).toBeUndefined();
+    expect(getFeatureByUserMock).toHaveBeenCalledWith("user-1", 11);
+    expect(deleteFeatureMock).toHaveBeenCalledWith(11);
+    expect(result).toEqual({ id: 11 });
   });
 });

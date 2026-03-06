@@ -47,7 +47,8 @@ export default function NewFeatureForm({ projectId }: NewFeatureFormProps) {
               Create New Feature
             </h1>
             <p className="mt-2 text-sm text-[#C7CCD6] md:text-base">
-              Add a feature with a clear description and deadline.
+              Add a feature with a short title and deadline. You can write the
+              markdown details after creating it.
             </p>
           </div>
 
@@ -60,7 +61,7 @@ export default function NewFeatureForm({ projectId }: NewFeatureFormProps) {
                 htmlFor="description"
                 className="block text-sm font-medium text-[#C7CCD6]"
               >
-                Feature description
+                Feature title
               </label>
               <Input
                 id="description"
