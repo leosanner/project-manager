@@ -2,10 +2,10 @@
 
 import { getUser } from "@/lib/auth/session";
 import { FeatureService } from "@/model/feature";
-import { createFeatureSchema } from "@/schemas/feature";
+import { createFeatureSchema, UpdateFeatureMarkdownSchema } from "@/schemas/feature";
 import { validadeSchema } from "@/utils/schemas";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 
 type CreateFeatureAction = {
   success: boolean;
@@ -50,16 +50,13 @@ export async function deleteFeatureAction(
   _prevState: DeleteFeatureAction,
   formData: FormData,
 ): Promise<DeleteFeatureAction> {
-  const featureId = formData.get("featureId");
-  const projectId = formData.get("projectId");
-  const parsedFeatureId = z.coerce
-    .number()
-    .int()
-    .positive()
-    .safeParse(featureId);
-  const parsedProjectId = z.uuid().safeParse(projectId);
+  const formObject = Object.fromEntries(formData);
+  const validatedObj = validadeSchema(UpdateFeatureMarkdownSchema.pick({
+    featureId: true,
+    projectId: true,
+  }), formObject);
 
-  if (!parsedFeatureId.success || !parsedProjectId.success) {
+  if (!validatedObj.success) {
     return {
       success: false,
       errors: {
@@ -67,6 +64,10 @@ export async function deleteFeatureAction(
       },
     };
   }
+  const parsedObj = UpdateFeatureMarkdownSchema.pick({
+    featureId: true,
+    projectId: true,
+  }).parse(formObject);
 
   const user = await getUser();
 
@@ -78,8 +79,8 @@ export async function deleteFeatureAction(
 
   try {
     const featureDeleted = await featureService.deleteFeature(
-      parsedFeatureId.data,
       user.id,
+      parsedObj.featureId,
     );
 
     if (!featureDeleted) {
@@ -99,5 +100,63 @@ export async function deleteFeatureAction(
     };
   }
 
-  redirect(`/project/${parsedProjectId.data}`);
+  redirect(`/project/${parsedObj.projectId}`);
+}
+
+type UpdateFeatureMarkdownAction = {
+  success: boolean;
+  errors?: Record<string, string[]>;
+  submittedAt?: number;
+};
+
+export async function updateFeatureMarkdownAction(
+  _prevState: UpdateFeatureMarkdownAction,
+  formData: FormData,
+): Promise<UpdateFeatureMarkdownAction> {
+  const formObject = Object.fromEntries(formData);
+  const validatedObj = validadeSchema(UpdateFeatureMarkdownSchema, formObject);
+
+  if (!validatedObj.success) {
+    return validatedObj;
+  }
+
+  const user = await getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const parsedObj = UpdateFeatureMarkdownSchema.parse(formObject);
+  const featureService = new FeatureService();
+
+  try {
+    const updatedFeature = await featureService.updateMarkdownContent(
+      parsedObj.markdownContent,
+      parsedObj.featureId,
+      user.id,
+    );
+
+    if (!updatedFeature) {
+      return {
+        success: false,
+        errors: {
+          internalServerError: ["Feature not found or not allowed"],
+        },
+      };
+    }
+  } catch {
+    return {
+      success: false,
+      errors: {
+        internalServerError: ["Internal server error updating markdown"],
+      },
+    };
+  }
+
+  revalidatePath(`/project/${parsedObj.projectId}/${parsedObj.featureId}`);
+
+  return {
+    success: true,
+    submittedAt: Date.now(),
+  };
 }

@@ -64,3 +64,13 @@ export const createFeatureSchema = (numDays: number) => {
     projectId: z.uuid("Project ID must be a valid UUID"),
   });
 };
+
+export const UpdateFeatureMarkdownSchema = z.object({
+  projectId: z.uuid("Project ID must be a valid UUID"),
+  featureId: z.coerce.number().int().positive("Feature ID must be valid"),
+  markdownContent: z
+    .string()
+    .trim()
+    .min(1, "Markdown content must not be empty")
+    .max(30000, "Markdown content must have at most 30000 characters"),
+});

@@ -24,8 +24,7 @@ export default function NewProject() {
               Create New Project
             </h1>
             <p className="mt-2 text-sm text-[#C7CCD6] md:text-base">
-              Give your project a clear name. You can add features and tasks
-              after creation.
+              Give your project a clear name. You can add features and markdown details after creation.
             </p>
           </div>
 

@@ -19,7 +19,7 @@ export default function DeleteProjectForm({ projectId }: DeleteProjectFormProps)
       action={formAction}
       onSubmit={(event) => {
         const confirmed = window.confirm(
-          "Delete this project? All features and tasks inside it will be deleted.",
+          "Delete this project? All features and their markdown content will be deleted.",
         );
 
         if (!confirmed) {

@@ -85,11 +85,6 @@ export default async function Home() {
       value: projectsSummary.totalFeatures,
       accentColor: "#8B5CF6",
     },
-    {
-      label: "Total Tasks",
-      value: projectsSummary.totalTasks,
-      accentColor: "#FF4D73",
-    },
   ];
 
   return (
@@ -129,7 +124,7 @@ export default async function Home() {
         </header>
 
         <section className="mb-14 md:mb-16">
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
             {metrics.map((metric) => (
               <div
                 key={metric.label}
@@ -206,7 +201,7 @@ export default async function Home() {
                       topInscription={`Updated ${formattedDate}`}
                       mainText={project.projectName}
                       mainTextHref={`/project/${project.projectId}`}
-                      subMainText={`${project.totalFeatures} Features • ${project.totalTasks} Tasks`}
+                      subMainText={`${project.totalFeatures} Features`}
                       progressBarInscription=""
                       progress={0}
                       progressValue=""

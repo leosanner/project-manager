@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@mdxeditor/editor/style.css";
 
 :root {
   --bg-primary: #000000;
@@ -136,4 +137,72 @@ body {
   background: rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(8px);
+}
+
+.mdx-toolbar-row {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 0.25rem !important;
+  overflow-x: auto !important;
+  white-space: nowrap !important;
+}
+
+.mdx-toolbar-row > * {
+  flex: 0 0 auto;
+}
+
+.mdx-toolbar-row button,
+.mdx-toolbar-row [role="button"] {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.mdxeditor {
+  --basePageBg: #050505;
+  --baseBase: #070707;
+  --baseBgSubtle: #111318;
+  --baseBg: #181b22;
+  --baseBgHover: #222734;
+  --baseBgActive: #2b3141;
+  --baseLine: #2a2a2a;
+  --baseBorder: #3b4358;
+  --baseBorderHover: #5a647d;
+  --baseText: #e9f0ff;
+  --baseTextContrast: #ffffff;
+}
+
+.mdxeditor .mdx-toolbar-row {
+  background-color: #181b22 !important;
+  border: 1px solid #3b4358;
+  border-radius: 0.5rem;
+}
+
+.mdxeditor .mdx-toolbar-row button,
+.mdxeditor .mdx-toolbar-row [role="button"],
+.mdxeditor .mdx-toolbar-row [role="combobox"] {
+  color: #f5f8ff !important;
+}
+
+.mdxeditor .mdx-toolbar-row svg {
+  color: #f5f8ff !important;
+  opacity: 1 !important;
+}
+
+.mdxeditor [role="listbox"] {
+  background-color: #181b22 !important;
+  border: 1px solid #3b4358 !important;
+}
+
+.mdxeditor ._contentEditable_1e2ox_465,
+.mdxeditor ._contentEditable_1e2ox_465 p,
+.mdxeditor ._contentEditable_1e2ox_465 li {
+  color: #ffffff !important;
+}
+
+.mdxeditor [contenteditable="true"] {
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
 }

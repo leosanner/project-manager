@@ -1,10 +1,8 @@
 import { getUser } from "@/lib/auth/session";
-import { FeatureService } from "@/model/feature";
 import { ProjectService } from "@/model/project";
-import { TaskList, type Task } from "@/components/ui/task-list";
 import { redirect } from "next/navigation";
-import NewTaskForm from "./new-task-form";
 import DeleteFeatureForm from "./delete-feature-form";
+import FeatureMarkdownEditor from "./feature-markdown-editor";
 
 type PageProps = {
   params: Promise<{
@@ -22,7 +20,6 @@ export default async function Page({ params }: PageProps) {
   }
 
   const projectModel = new ProjectService();
-  const featureModel = new FeatureService();
   const projectFeatures = await projectModel.getProjectFeatures(id);
   const currentFeature = projectFeatures?.find(
     (feature) => feature.id === parsedFeatureId,
@@ -31,24 +28,6 @@ export default async function Page({ params }: PageProps) {
   if (!currentFeature) {
     redirect(`/project/${id}`);
   }
-
-  const tasks = await featureModel.getFeatureTasks({
-    featureId: parsedFeatureId,
-    featureAuthorId: user.id,
-  });
-
-  const featureTasks: Task[] =
-    tasks?.map((task) => ({
-      id: task.id,
-      task: task.description,
-      category: "Task",
-      status: task.completed ? "Completed" : "In Progress",
-      dueDate: task.createdAt.toLocaleDateString("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      }),
-    })) ?? [];
 
   return (
     <section className="min-h-screen bg-black px-4 py-10">
@@ -65,9 +44,11 @@ export default async function Page({ params }: PageProps) {
           <DeleteFeatureForm projectId={id} featureId={parsedFeatureId} />
         </header>
 
-        <NewTaskForm projectId={id} featureId={parsedFeatureId} />
-
-        <TaskList title="Feature Tasks" tasks={featureTasks} />
+        <FeatureMarkdownEditor
+          projectId={id}
+          featureId={parsedFeatureId}
+          initialMarkdown={currentFeature.markdownContent}
+        />
       </div>
     </section>
   );
