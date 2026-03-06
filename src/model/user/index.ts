@@ -1,6 +1,6 @@
 import { getUser } from "@/lib/auth/session";
 import { ProjectService } from "../project";
-import { FeatureService } from "../feature";
+import { FeatureRepository } from "@/repository/feature";
 
 export interface UserFeatureByProject {
   featureId: number;
@@ -12,11 +12,11 @@ export interface UserFeatureByProject {
 
 export class UserService {
   projectService: ProjectService;
-  featureService: FeatureService;
+  featureRepository: FeatureRepository;
 
   constructor() {
     this.projectService = new ProjectService();
-    this.featureService = new FeatureService();
+    this.featureRepository = new FeatureRepository();
   }
 
   private async getUser() {
@@ -30,24 +30,27 @@ export class UserService {
     }
 
     const totalFeatures = await this.projectService.getTotalFeatures(user.id);
+    const currenDate = new Date();
 
     return totalFeatures.reduce<Record<string, UserFeatureByProject[]>>(
       (currentDict, obj) => {
-        const featuresObject = obj.features.map((feature) => {
-          const featureDeadline = feature.deadline;
-          const featureId = feature.id;
-          const featureName = feature.description;
-          const projectId = obj.id;
-          const projectName = obj.name;
+        const featuresObject = obj.features
+          .filter((feature) => feature.deadline > currenDate)
+          .map((feature) => {
+            const featureDeadline = feature.deadline;
+            const featureId = feature.id;
+            const featureName = feature.description;
+            const projectId = obj.id;
+            const projectName = obj.name;
 
-          return {
-            featureId,
-            featureName,
-            featureDeadline,
-            projectId,
-            projectName,
-          };
-        });
+            return {
+              featureId,
+              featureName,
+              featureDeadline,
+              projectId,
+              projectName,
+            };
+          });
 
         currentDict[obj.id] = featuresObject;
         return currentDict;
