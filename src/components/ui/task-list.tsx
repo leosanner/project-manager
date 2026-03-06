@@ -6,6 +6,17 @@ import { Trash2 } from "lucide-react";
 import { useActionState } from "react";
 import { deleteFeatureAction } from "@/app/actions/feature";
 import DisplayErrors from "@/components/display-errors";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 export interface Feature {
   id: number | string;
@@ -139,32 +150,45 @@ const DeleteFeatureInlineForm = ({
   const [state, formAction, isPending] = useActionState(deleteFeatureAction, {
     success: true,
   });
+  const formId = `delete-feature-inline-${projectId}-${featureId}`;
 
   return (
-    <form
-      action={formAction}
-      onSubmit={(event) => {
-        const confirmed = window.confirm(
-          "Delete this feature and its markdown content?",
-        );
-
-        if (!confirmed) {
-          event.preventDefault();
-        }
-      }}
-      className="flex items-center justify-end gap-2"
-    >
+    <form id={formId} action={formAction} className="flex items-center justify-end gap-2">
       <input type="hidden" name="projectId" value={projectId} />
       <input type="hidden" name="featureId" value={featureId} />
-      <button
-        type="submit"
-        disabled={isPending}
-        className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-red-400/50 bg-red-500/10 text-red-300 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-70"
-        aria-label="Delete feature"
-        title="Delete feature"
-      >
-        <Trash2 size={16} />
-      </button>
+
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <button
+            type="button"
+            disabled={isPending}
+            className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-red-400/50 bg-red-500/10 text-red-300 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-70"
+            aria-label="Delete feature"
+            title="Delete feature"
+          >
+            <Trash2 size={16} />
+          </button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete feature?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this feature and its markdown content.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <Button
+              type="submit"
+              form={formId}
+              variant="destructive"
+              disabled={isPending}
+            >
+              {isPending ? "Deleting..." : "Delete"}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {state.errors && (
         <DisplayErrors errors={state.errors} fieldName="internalServerError" />
