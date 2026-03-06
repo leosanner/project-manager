@@ -155,7 +155,7 @@ export default async function Home() {
               Calendar
             </h2>
           </div>
-          <div className="mx-auto h-[980px] max-w-[1100px] md:h-[1040px]">
+          <div className="mx-auto h-[760px] max-w-[1100px] md:h-[840px]">
             <FullscreenCalendarDemo data={calendarEvents} />
           </div>
         </section>

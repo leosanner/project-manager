@@ -73,7 +73,9 @@ const colStartClasses = [
 export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = React.useState(today);
-  const [currentMonth, setCurrentMonth] = React.useState(format(today, "MMM-yyyy"));
+  const [currentMonth, setCurrentMonth] = React.useState(
+    format(today, "MMM-yyyy"),
+  );
   const [expandedFeatureByDay, setExpandedFeatureByDay] = React.useState<
     Record<string, string | null>
   >({});
@@ -99,29 +101,34 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
   }
 
   function groupEventsByFeature(events: Event[]): FeatureGroup[] {
-    const grouped = events.reduce<Record<string, FeatureGroup>>((acc, event) => {
-      const projectIdToken = normalizeGroupToken(event.projectId);
-      const projectNameToken = normalizeGroupToken(event.projectName ?? event.time);
-      const fallbackColorToken = normalizeGroupToken(event.color);
+    const grouped = events.reduce<Record<string, FeatureGroup>>(
+      (acc, event) => {
+        const projectIdToken = normalizeGroupToken(event.projectId);
+        const projectNameToken = normalizeGroupToken(
+          event.projectName ?? event.time,
+        );
+        const fallbackColorToken = normalizeGroupToken(event.color);
 
-      const groupId =
-        projectIdToken ||
-        projectNameToken ||
-        fallbackColorToken ||
-        normalizeGroupToken(event.id);
+        const groupId =
+          projectIdToken ||
+          projectNameToken ||
+          fallbackColorToken ||
+          normalizeGroupToken(event.id);
 
-      if (!acc[groupId]) {
-        acc[groupId] = {
-          id: groupId,
-          name: event.projectName ?? event.time ?? "Project",
-          color: event.color,
-          events: [],
-        };
-      }
+        if (!acc[groupId]) {
+          acc[groupId] = {
+            id: groupId,
+            name: event.projectName ?? event.time ?? "Project",
+            color: event.color,
+            events: [],
+          };
+        }
 
-      acc[groupId].events.push(event);
-      return acc;
-    }, {});
+        acc[groupId].events.push(event);
+        return acc;
+      },
+      {},
+    );
 
     return Object.values(grouped);
   }
@@ -168,10 +175,6 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
         </div>
 
         <div className="flex flex-col items-center gap-4 md:flex-row md:gap-6">
-          <Button variant="outline" size="icon" className="hidden lg:flex">
-            <SearchIcon size={16} strokeWidth={2} aria-hidden="true" />
-          </Button>
-
           <Separator orientation="vertical" className="hidden h-6 lg:block" />
 
           <div className="inline-flex w-full -space-x-px rounded-lg shadow-sm shadow-black/5 md:w-auto rtl:space-x-reverse">
@@ -203,12 +206,10 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
           </div>
 
           <Separator orientation="vertical" className="hidden h-6 md:block" />
-          <Separator orientation="horizontal" className="block w-full md:hidden" />
-
-          <Button className="w-full gap-2 md:w-auto">
-            <PlusCircleIcon size={16} strokeWidth={2} aria-hidden="true" />
-            <span>New Event</span>
-          </Button>
+          <Separator
+            orientation="horizontal"
+            className="block w-full md:hidden"
+          />
         </div>
       </div>
 
@@ -260,13 +261,20 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                           !isToday(day) &&
                           !isSameMonth(day, firstDayCurrentMonth) &&
                           "text-muted-foreground",
-                        isEqual(day, selectedDay) && isToday(day) && "border-none bg-primary",
-                        isEqual(day, selectedDay) && !isToday(day) && "bg-foreground",
-                        (isEqual(day, selectedDay) || isToday(day)) && "font-semibold",
+                        isEqual(day, selectedDay) &&
+                          isToday(day) &&
+                          "border-none bg-primary",
+                        isEqual(day, selectedDay) &&
+                          !isToday(day) &&
+                          "bg-foreground",
+                        (isEqual(day, selectedDay) || isToday(day)) &&
+                          "font-semibold",
                         "flex h-7 w-7 items-center justify-center rounded-full text-xs hover:border",
                       )}
                     >
-                      <time dateTime={format(day, "yyyy-MM-dd")}>{format(day, "d")}</time>
+                      <time dateTime={format(day, "yyyy-MM-dd")}>
+                        {format(day, "d")}
+                      </time>
                     </button>
                   </header>
                   <div className="relative flex-1 space-y-2.5 p-2.5">
@@ -282,14 +290,15 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                             }}
                             className={cn(
                               "flex h-6 min-w-6 items-center justify-center rounded-full border border-white/20 px-1.5 text-xs font-semibold text-white transition-transform hover:scale-110",
-                              expandedFeatureId === featureGroup.id && "scale-110 border-white/50",
+                              expandedFeatureId === featureGroup.id &&
+                                "scale-110 border-white/50",
                             )}
                             style={
                               featureGroup.color
                                 ? { backgroundColor: featureGroup.color }
                                 : undefined
                             }
-                            aria-label={`Expandir features do projeto ${featureGroup.name}`}
+                            aria-label={`Expand project features ${featureGroup.name}`}
                             title={`${featureGroup.name} (${featureGroup.events.length} features)`}
                           >
                             {featureGroup.events.length}
@@ -311,19 +320,19 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                           }
                         >
                           <p className="text-sm font-semibold">
-                            Projeto: {expandedFeature.name}
+                            Project: {expandedFeature.name}
                           </p>
                           <div className="space-y-2">
                             <p className="text-sm font-semibold">Features:</p>
                             <div className="max-h-44 space-y-1 overflow-y-auto pr-1">
-                            {expandedFeature.events.map((event, index) => (
-                              <p
-                                key={event.id}
-                                className="truncate text-sm leading-5 text-muted-foreground"
-                              >
-                                {index + 1}. {event.name}
-                              </p>
-                            ))}
+                              {expandedFeature.events.map((event, index) => (
+                                <p
+                                  key={event.id}
+                                  className="truncate text-sm leading-5 text-muted-foreground"
+                                >
+                                  {index + 1}. {event.name}
+                                </p>
+                              ))}
                             </div>
                           </div>
                         </div>
@@ -358,7 +367,8 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                       !isToday(day) &&
                       !isSameMonth(day, firstDayCurrentMonth) &&
                       "text-muted-foreground",
-                    (isEqual(day, selectedDay) || isToday(day)) && "font-semibold",
+                    (isEqual(day, selectedDay) || isToday(day)) &&
+                      "font-semibold",
                     "relative flex min-h-14 flex-col border-r border-b px-3 py-2 hover:bg-muted focus:z-10",
                   )}
                 >
@@ -397,42 +407,45 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
                                 ? { backgroundColor: featureGroup.color }
                                 : undefined
                             }
-                            aria-label={`Expandir features do projeto ${featureGroup.name}`}
+                            aria-label={`Expand project features ${featureGroup.name}`}
                           >
                             {featureGroup.events.length}
                           </button>
                         ))}
                       </div>
-                    {expandedFeature && (
-                      <div className="pointer-events-none absolute left-1/2 top-12 z-40 w-[240px] max-w-[calc(100vw-1.5rem)] -translate-x-1/2">
-                        <div
-                          className="pointer-events-auto space-y-2 rounded-lg border border-white/20 bg-[#111111] p-3 shadow-lg"
-                          style={
-                            expandedFeature.color
-                              ? {
-                                  borderColor: expandedFeature.color,
-                                  backgroundColor: `${expandedFeature.color}1A`,
-                                }
-                              : undefined
-                          }
-                        >
-                          <p className="truncate text-xs font-semibold">
-                            Projeto: {expandedFeature.name}
-                          </p>
-                          <p className="text-xs font-semibold">Features:</p>
-                          <div className="max-h-28 space-y-1 overflow-y-auto pr-1">
-                            {expandedFeature.events.map((event, index) => (
-                              <p key={event.id} className="truncate text-xs text-muted-foreground">
-                                {index + 1}. {event.name}
-                              </p>
-                            ))}
+                      {expandedFeature && (
+                        <div className="pointer-events-none absolute left-1/2 top-12 z-40 w-[240px] max-w-[calc(100vw-1.5rem)] -translate-x-1/2">
+                          <div
+                            className="pointer-events-auto space-y-2 rounded-lg border border-white/20 bg-[#111111] p-3 shadow-lg"
+                            style={
+                              expandedFeature.color
+                                ? {
+                                    borderColor: expandedFeature.color,
+                                    backgroundColor: `${expandedFeature.color}1A`,
+                                  }
+                                : undefined
+                            }
+                          >
+                            <p className="truncate text-xs font-semibold">
+                              Project: {expandedFeature.name}
+                            </p>
+                            <p className="text-xs font-semibold">Features:</p>
+                            <div className="max-h-28 space-y-1 overflow-y-auto pr-1">
+                              {expandedFeature.events.map((event, index) => (
+                                <p
+                                  key={event.id}
+                                  className="truncate text-xs text-muted-foreground"
+                                >
+                                  {index + 1}. {event.name}
+                                </p>
+                              ))}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
