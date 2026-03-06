@@ -6,4 +6,8 @@ export class PlanModel {
   constructor() {
     this.planRepository = new PlanRepository();
   }
+
+  async getPlans() {
+    return await this.planRepository.getPlans();
+  }
 }

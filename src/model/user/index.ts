@@ -23,6 +23,15 @@ export class UserService {
     return await getUser();
   }
 
+  async getUserRole() {
+    const user = await this.getUser();
+    if (!user) {
+      return;
+    }
+
+    return user.role;
+  }
+
   async getUserFeatures() {
     const user = await this.getUser();
     if (!user) {
