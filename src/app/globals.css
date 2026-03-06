@@ -184,6 +184,7 @@ body {
 .mdxeditor .mdx-toolbar-row [role="button"],
 .mdxeditor .mdx-toolbar-row [role="combobox"] {
   color: #f5f8ff !important;
+  transition: background-color 140ms ease;
 }
 
 .mdxeditor .mdx-toolbar-row svg {
@@ -194,6 +195,43 @@ body {
 .mdxeditor [role="listbox"] {
   background-color: #181b22 !important;
   border: 1px solid #3b4358 !important;
+}
+
+[class*="_toolbarNodeKindSelectContainer_"],
+[class*="_toolbarButtonDropdownContainer_"],
+[class*="_selectContainer_"] {
+  background-color: #181b22 !important;
+  border: 1px solid #3b4358 !important;
+}
+
+[class*="_toolbarNodeKindSelectTrigger_"],
+[class*="_toolbarButtonSelectTrigger_"],
+[class*="_selectTrigger_"] {
+  background-color: #181b22 !important;
+  color: #f5f8ff !important;
+  border: 1px solid #3b4358 !important;
+}
+
+[class*="_toolbarNodeKindSelectItem_"],
+[class*="_selectItem_"] {
+  color: #f5f8ff !important;
+  transition: background-color 140ms ease;
+}
+
+.mdxeditor .mdx-toolbar-row button:hover,
+.mdxeditor .mdx-toolbar-row [role="button"]:hover,
+.mdxeditor .mdx-toolbar-row [role="combobox"]:hover,
+[class*="_toolbarNodeKindSelectTrigger_"]:hover,
+[class*="_toolbarButtonSelectTrigger_"]:hover,
+[class*="_selectTrigger_"]:hover {
+  background-color: #222734 !important;
+}
+
+[class*="_toolbarNodeKindSelectItem_"]:hover,
+[class*="_selectItem_"]:hover,
+[class*="_toolbarNodeKindSelectItem_"][data-highlighted],
+[class*="_selectItem_"][data-highlighted] {
+  background-color: #222734 !important;
 }
 
 .mdxeditor ._contentEditable_1e2ox_465,
