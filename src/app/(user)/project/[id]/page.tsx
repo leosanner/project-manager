@@ -50,7 +50,7 @@ export default async function Page({ params }: PageProps) {
         </div>
 
         <div className="mt-10">
-          <TaskList title="Project Features" features={featureTasks} />
+          <TaskList title="Project Features" features={featureTasks} projectId={id} />
         </div>
       </div>
     </section>

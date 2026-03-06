@@ -97,13 +97,9 @@ export default async function Home() {
                 className="mb-3 inline-block text-4xl font-semibold leading-tight tracking-tight text-white md:text-6xl"
                 style={{ textShadow: "0 0 30px rgba(57, 213, 255, 0.3)" }}
               >
-                Your Projects,{" "}
+                Welcome Back,{" "}
                 <span className="text-cyan-500"> {user.name}</span>
               </h1>
-              <p className="text-base leading-relaxed text-[#C7CCD6] md:text-lg">
-                Strategic overview of all active initiatives and their execution
-                status.
-              </p>
             </div>
 
             <Link
