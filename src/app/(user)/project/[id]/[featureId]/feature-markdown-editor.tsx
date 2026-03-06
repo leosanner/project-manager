@@ -76,7 +76,7 @@ export default function FeatureMarkdownEditor({
             Edit markdown
           </Button>
         </div>
-        <div className="prose prose-invert max-w-none prose-headings:text-white prose-p:text-[#D4DAE5] prose-li:text-[#D4DAE5] prose-a:text-cyan-300 prose-code:text-cyan-300 prose-strong:text-white prose-blockquote:border-l-cyan-500 prose-blockquote:text-[#C7CCD6] prose-table:text-[#D4DAE5]">
+        <div className="feature-markdown-content">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {savedMarkdown}
           </ReactMarkdown>
@@ -112,7 +112,7 @@ export default function FeatureMarkdownEditor({
             key={editorSessionKey}
             markdown={savedMarkdown}
             onChange={setDraftMarkdown}
-            contentEditableClassName="min-h-[300px] px-2 py-1 text-sm text-white"
+            contentEditableClassName="feature-markdown-content min-h-[300px] px-2 py-1 text-sm text-white"
             plugins={[
               headingsPlugin(),
               listsPlugin(),
