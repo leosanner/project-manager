@@ -1,3 +1,4 @@
+import { AdminModel } from "@/model/admin";
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -8,72 +9,6 @@ import {
   UserCog,
   Users,
 } from "lucide-react";
-
-const summaryCards = [
-  {
-    title: "Total Users",
-    value: "248",
-    delta: "+12 this week",
-    icon: Users,
-    accent: "#39D5FF",
-  },
-  {
-    title: "Admins",
-    value: "9",
-    delta: "No changes",
-    icon: Shield,
-    accent: "#8B5CF6",
-  },
-  {
-    title: "Pending Reviews",
-    value: "17",
-    delta: "5 high priority",
-    icon: Clock3,
-    accent: "#FF8A3D",
-  },
-  {
-    title: "Incidents",
-    value: "2",
-    delta: "-1 compared to yesterday",
-    icon: AlertTriangle,
-    accent: "#FF4D73",
-  },
-];
-
-const users = [
-  {
-    name: "Leandro Costa",
-    email: "leandro@pmflow.com",
-    role: "ADMIN",
-    status: "Active",
-    projects: 11,
-    lastSeen: "2 min ago",
-  },
-  {
-    name: "Julia Fernandes",
-    email: "julia@pmflow.com",
-    role: "MANAGER",
-    status: "Active",
-    projects: 6,
-    lastSeen: "9 min ago",
-  },
-  {
-    name: "Mateus Almeida",
-    email: "mateus@pmflow.com",
-    role: "MEMBER",
-    status: "Suspended",
-    projects: 2,
-    lastSeen: "1 day ago",
-  },
-  {
-    name: "Carla Martins",
-    email: "carla@pmflow.com",
-    role: "CLIENT",
-    status: "Invited",
-    projects: 1,
-    lastSeen: "Never",
-  },
-];
 
 const pendingActions = [
   {
@@ -117,7 +52,67 @@ const auditLogs = [
   },
 ];
 
-export default function AdminPage() {
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+const getRoleStyles = (role: string) => {
+  if (role === "ADMIN") {
+    return {
+      background: "rgba(57, 213, 255, 0.12)",
+      color: "#9be8ff",
+      borderColor: "rgba(57, 213, 255, 0.4)",
+    };
+  }
+
+  return {
+    background: "rgba(255, 255, 255, 0.05)",
+    color: "#C7CCD6",
+    borderColor: "rgba(255, 255, 255, 0.2)",
+  };
+};
+
+export default async function AdminPage() {
+  const adminModel = new AdminModel();
+  const users = (await adminModel.getUsers()) ?? [];
+
+  const totalUsers = users.length;
+  const totalAdmins = users.filter((user) => user.role === "ADMIN").length;
+
+  const summaryCards = [
+    {
+      title: "Total Users",
+      value: `${totalUsers}`,
+      delta: "Registered accounts",
+      icon: Users,
+      accent: "#39D5FF",
+    },
+    {
+      title: "Admins",
+      value: `${totalAdmins}`,
+      delta: "Users with full access",
+      icon: Shield,
+      accent: "#8B5CF6",
+    },
+    {
+      title: "Pending Reviews",
+      value: "17",
+      delta: "5 high priority",
+      icon: Clock3,
+      accent: "#FF8A3D",
+    },
+    {
+      title: "Incidents",
+      value: "2",
+      delta: "-1 compared to yesterday",
+      icon: AlertTriangle,
+      accent: "#FF4D73",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-black">
       <div className="mx-auto max-w-[1400px] space-y-8 px-6 py-10 md:px-8 md:py-12">
@@ -204,51 +199,65 @@ export default function AdminPage() {
                   <tr>
                     <th className="px-5 py-3">User</th>
                     <th className="px-5 py-3">Role</th>
-                    <th className="px-5 py-3">Status</th>
-                    <th className="px-5 py-3">Projects</th>
-                    <th className="px-5 py-3">Last Seen</th>
+                    <th className="px-5 py-3">Verified</th>
+                    <th className="px-5 py-3">Created At</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((user) => (
-                    <tr
-                      key={user.email}
-                      className="border-b border-white/5 text-white/90 transition-colors hover:bg-white/[0.03]"
-                    >
-                      <td className="px-5 py-3.5">
-                        <p className="font-medium text-white">{user.name}</p>
-                        <p className="text-xs text-[#C7CCD6]">{user.email}</p>
+                  {users.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="px-5 py-6 text-center text-sm text-[#C7CCD6]"
+                      >
+                        No users found.
                       </td>
-                      <td className="px-5 py-3.5">
-                        <span className="rounded-md border border-white/15 bg-white/[0.03] px-2 py-1 text-xs">
-                          {user.role}
-                        </span>
-                      </td>
-                      <td className="px-5 py-3.5">
-                        <span
-                          className="inline-flex rounded-full px-2.5 py-1 text-xs font-medium"
-                          style={{
-                            background:
-                              user.status === "Active"
-                                ? "rgba(34, 197, 94, 0.15)"
-                                : user.status === "Suspended"
-                                  ? "rgba(239, 68, 68, 0.18)"
-                                  : "rgba(148, 163, 184, 0.2)",
-                            color:
-                              user.status === "Active"
-                                ? "#86efac"
-                                : user.status === "Suspended"
-                                  ? "#fca5a5"
-                                  : "#cbd5e1",
-                          }}
-                        >
-                          {user.status}
-                        </span>
-                      </td>
-                      <td className="px-5 py-3.5">{user.projects}</td>
-                      <td className="px-5 py-3.5 text-[#C7CCD6]">{user.lastSeen}</td>
                     </tr>
-                  ))}
+                  ) : (
+                    users.map((user) => {
+                      const roleStyles = getRoleStyles(user.role);
+
+                      return (
+                        <tr
+                          key={user.id}
+                          className="border-b border-white/5 text-white/90 transition-colors hover:bg-white/[0.03]"
+                        >
+                          <td className="px-5 py-3.5">
+                            <p className="font-medium text-white">{user.name}</p>
+                            <p className="text-xs text-[#C7CCD6]">{user.email}</p>
+                          </td>
+                          <td className="px-5 py-3.5">
+                            <span
+                              className="rounded-md border px-2 py-1 text-xs"
+                              style={{
+                                background: roleStyles.background,
+                                color: roleStyles.color,
+                                borderColor: roleStyles.borderColor,
+                              }}
+                            >
+                              {user.role}
+                            </span>
+                          </td>
+                          <td className="px-5 py-3.5">
+                            <span
+                              className="inline-flex rounded-full px-2.5 py-1 text-xs font-medium"
+                              style={{
+                                background: user.emailVerified
+                                  ? "rgba(34, 197, 94, 0.15)"
+                                  : "rgba(148, 163, 184, 0.2)",
+                                color: user.emailVerified ? "#86efac" : "#cbd5e1",
+                              }}
+                            >
+                              {user.emailVerified ? "Yes" : "No"}
+                            </span>
+                          </td>
+                          <td className="px-5 py-3.5 text-[#C7CCD6]">
+                            {formatDate(user.createdAt)}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>
