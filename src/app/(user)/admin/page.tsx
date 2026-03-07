@@ -1,4 +1,5 @@
 import { AdminModel } from "@/model/admin";
+import CreatePlanForm from "./create-plan-form";
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -264,6 +265,8 @@ export default async function AdminPage() {
           </article>
 
           <div className="space-y-6">
+            <CreatePlanForm />
+
             <article className="rounded-xl border border-white/15 bg-[#0A0A0A] p-5">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-white">Pending Actions</h2>
