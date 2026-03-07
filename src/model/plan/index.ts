@@ -1,4 +1,5 @@
 import { PlanRepository } from "@/repository/plan";
+import { PlanUncheckedCreateInput } from "../../../generated/prisma/models";
 
 export class PlanModel {
   planRepository: PlanRepository;
@@ -9,5 +10,9 @@ export class PlanModel {
 
   async getPlans() {
     return await this.planRepository.getPlans();
+  }
+
+  async createPlan(planData: PlanUncheckedCreateInput) {
+    return await this.planRepository.createPlan(planData);
   }
 }
