@@ -1,6 +1,7 @@
 import { getUser } from "@/lib/auth/session";
 import { ProjectService } from "../project";
 import { FeatureRepository } from "@/repository/feature";
+import { PlanType, Role } from "../../../generated/prisma/enums";
 
 export interface UserFeatureByProject {
   featureId: number;
@@ -29,7 +30,7 @@ export class UserService {
       return;
     }
 
-    return user.role;
+    return user.role as Role;
   }
 
   async getUserFeatures() {

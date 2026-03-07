@@ -10,7 +10,7 @@ export default async function AdminLayout({
   const userModel = new UserService();
   const userRole = await userModel.getUserRole();
 
-  if (!userRole || userRole == "ADMIN") {
+  if (!userRole || userRole != "ADMIN") {
     redirect("/");
   }
 
