@@ -31,7 +31,7 @@ export class AdminModel {
       return;
     }
 
-    return await this.userRepository.getUsers();
+    return await this.userModel.getUsers();
   }
 
   async createNewPlan(planData: PlanUncheckedCreateInput) {

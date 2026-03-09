@@ -45,6 +45,10 @@ export class UserService {
     return await this.userRepository.setUserPlan(user.id, planId);
   }
 
+  async getUsers() {
+    return await this.userRepository.getUsers();
+  }
+
   async getUserFeatures() {
     const user = await this.getUser();
     if (!user) {

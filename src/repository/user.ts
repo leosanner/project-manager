@@ -1,6 +1,4 @@
 import { prisma } from "@/lib/prisma/index";
-import { PlanType } from "../../generated/prisma/enums";
-import { string } from "zod";
 
 export class UserRepository {
   async getUserById(userId: string) {
