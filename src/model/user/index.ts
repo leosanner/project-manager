@@ -1,7 +1,8 @@
 import { getUser } from "@/lib/auth/session";
 import { ProjectService } from "../project";
 import { FeatureRepository } from "@/repository/feature";
-import { Role } from "../../../generated/prisma/enums";
+import { PlanType, Role } from "../../../generated/prisma/enums";
+import { UserRepository } from "@/repository/user";
 
 export interface UserFeatureByProject {
   featureId: number;
@@ -14,10 +15,12 @@ export interface UserFeatureByProject {
 export class UserService {
   projectService: ProjectService;
   featureRepository: FeatureRepository;
+  userRepository: UserRepository;
 
   constructor() {
     this.projectService = new ProjectService();
     this.featureRepository = new FeatureRepository();
+    this.userRepository = new UserRepository();
   }
 
   private async getUser() {
@@ -31,6 +34,15 @@ export class UserService {
     }
 
     return user.role as Role;
+  }
+
+  async setUserPlan(planId: string) {
+    const user = await this.getUser();
+    if (!user) {
+      return;
+    }
+
+    return await this.userRepository.setUserPlan(user.id, planId);
   }
 
   async getUserFeatures() {
