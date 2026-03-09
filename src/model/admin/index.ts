@@ -1,3 +1,4 @@
+import { PlanType } from "../../../generated/prisma/enums";
 import { PlanUncheckedCreateInput } from "../../../generated/prisma/models";
 import { PlanModel } from "../plan";
 import { UserService } from "../user";
@@ -32,6 +33,22 @@ export class AdminModel {
     }
 
     return await this.userModel.getUsers();
+  }
+
+  async setUserPlan(planType: PlanType) {
+    if (!(await this.userAdmin)) {
+      return;
+    }
+
+    const planInfo = (await this.planModel.getPlans()).find(
+      (plan) => plan.plantype == planType,
+    );
+
+    if (!planInfo) {
+      return;
+    }
+
+    return await this.userModel.setUserPlan(planInfo.id);
   }
 
   async createNewPlan(planData: PlanUncheckedCreateInput) {
