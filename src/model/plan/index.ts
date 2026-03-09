@@ -20,7 +20,7 @@ export class PlanModel {
   async createPlan(planData: PlanUncheckedCreateInput) {
     const currentPlans = await this.planRepository.getPlanTypes();
 
-    if (currentPlans.find((plan) => plan.plantype === planData.plantype)) {
+    if (currentPlans.some((plan) => plan.plantype === planData.plantype)) {
       throw Error("Plan Already Exists");
     }
 
