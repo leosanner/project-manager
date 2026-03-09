@@ -1,7 +1,7 @@
 import { getUser } from "@/lib/auth/session";
 import { ProjectService } from "../project";
 import { FeatureRepository } from "@/repository/feature";
-import { PlanType, Role } from "../../../generated/prisma/enums";
+import { Role } from "../../../generated/prisma/enums";
 
 export interface UserFeatureByProject {
   featureId: number;

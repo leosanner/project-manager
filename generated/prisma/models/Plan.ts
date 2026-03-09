@@ -236,6 +236,7 @@ export type PlanWhereInput = {
   maxFeatures?: Prisma.IntFilter<"Plan"> | number
   maxDocuments?: Prisma.IntFilter<"Plan"> | number
   price?: Prisma.FloatFilter<"Plan"> | number
+  users?: Prisma.UserListRelationFilter
 }
 
 export type PlanOrderByWithRelationInput = {
@@ -245,6 +246,7 @@ export type PlanOrderByWithRelationInput = {
   maxFeatures?: Prisma.SortOrder
   maxDocuments?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  users?: Prisma.UserOrderByRelationAggregateInput
 }
 
 export type PlanWhereUniqueInput = Prisma.AtLeast<{
@@ -257,6 +259,7 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   maxFeatures?: Prisma.IntFilter<"Plan"> | number
   maxDocuments?: Prisma.IntFilter<"Plan"> | number
   price?: Prisma.FloatFilter<"Plan"> | number
+  users?: Prisma.UserListRelationFilter
 }, "id">
 
 export type PlanOrderByWithAggregationInput = {
@@ -292,6 +295,7 @@ export type PlanCreateInput = {
   maxFeatures?: number
   maxDocuments?: number
   price?: number
+  users?: Prisma.UserCreateNestedManyWithoutPlanInput
 }
 
 export type PlanUncheckedCreateInput = {
@@ -301,6 +305,7 @@ export type PlanUncheckedCreateInput = {
   maxFeatures?: number
   maxDocuments?: number
   price?: number
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type PlanUpdateInput = {
@@ -310,6 +315,7 @@ export type PlanUpdateInput = {
   maxFeatures?: Prisma.IntFieldUpdateOperationsInput | number
   maxDocuments?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  users?: Prisma.UserUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanUncheckedUpdateInput = {
@@ -319,6 +325,7 @@ export type PlanUncheckedUpdateInput = {
   maxFeatures?: Prisma.IntFieldUpdateOperationsInput | number
   maxDocuments?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  users?: Prisma.UserUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanCreateManyInput = {
@@ -389,6 +396,11 @@ export type PlanSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
 }
 
+export type PlanNullableScalarRelationFilter = {
+  is?: Prisma.PlanWhereInput | null
+  isNot?: Prisma.PlanWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -413,6 +425,103 @@ export type FloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type PlanCreateNestedOneWithoutUsersInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutUsersInput, Prisma.PlanUncheckedCreateWithoutUsersInput>
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutUsersInput
+  connect?: Prisma.PlanWhereUniqueInput
+}
+
+export type PlanUpdateOneWithoutUsersNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutUsersInput, Prisma.PlanUncheckedCreateWithoutUsersInput>
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutUsersInput
+  upsert?: Prisma.PlanUpsertWithoutUsersInput
+  disconnect?: Prisma.PlanWhereInput | boolean
+  delete?: Prisma.PlanWhereInput | boolean
+  connect?: Prisma.PlanWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlanUpdateToOneWithWhereWithoutUsersInput, Prisma.PlanUpdateWithoutUsersInput>, Prisma.PlanUncheckedUpdateWithoutUsersInput>
+}
+
+export type PlanCreateWithoutUsersInput = {
+  id?: string
+  plantype?: $Enums.PlanType
+  maxProjects?: number
+  maxFeatures?: number
+  maxDocuments?: number
+  price?: number
+}
+
+export type PlanUncheckedCreateWithoutUsersInput = {
+  id?: string
+  plantype?: $Enums.PlanType
+  maxProjects?: number
+  maxFeatures?: number
+  maxDocuments?: number
+  price?: number
+}
+
+export type PlanCreateOrConnectWithoutUsersInput = {
+  where: Prisma.PlanWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlanCreateWithoutUsersInput, Prisma.PlanUncheckedCreateWithoutUsersInput>
+}
+
+export type PlanUpsertWithoutUsersInput = {
+  update: Prisma.XOR<Prisma.PlanUpdateWithoutUsersInput, Prisma.PlanUncheckedUpdateWithoutUsersInput>
+  create: Prisma.XOR<Prisma.PlanCreateWithoutUsersInput, Prisma.PlanUncheckedCreateWithoutUsersInput>
+  where?: Prisma.PlanWhereInput
+}
+
+export type PlanUpdateToOneWithWhereWithoutUsersInput = {
+  where?: Prisma.PlanWhereInput
+  data: Prisma.XOR<Prisma.PlanUpdateWithoutUsersInput, Prisma.PlanUncheckedUpdateWithoutUsersInput>
+}
+
+export type PlanUpdateWithoutUsersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  plantype?: Prisma.EnumPlanTypeFieldUpdateOperationsInput | $Enums.PlanType
+  maxProjects?: Prisma.IntFieldUpdateOperationsInput | number
+  maxFeatures?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDocuments?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+}
+
+export type PlanUncheckedUpdateWithoutUsersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  plantype?: Prisma.EnumPlanTypeFieldUpdateOperationsInput | $Enums.PlanType
+  maxProjects?: Prisma.IntFieldUpdateOperationsInput | number
+  maxFeatures?: Prisma.IntFieldUpdateOperationsInput | number
+  maxDocuments?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+}
+
+
+/**
+ * Count Type PlanCountOutputType
+ */
+
+export type PlanCountOutputType = {
+  users: number
+}
+
+export type PlanCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  users?: boolean | PlanCountOutputTypeCountUsersArgs
+}
+
+/**
+ * PlanCountOutputType without action
+ */
+export type PlanCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlanCountOutputType
+   */
+  select?: Prisma.PlanCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PlanCountOutputType without action
+ */
+export type PlanCountOutputTypeCountUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserWhereInput
+}
 
 
 export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -422,6 +531,8 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   maxFeatures?: boolean
   maxDocuments?: boolean
   price?: boolean
+  users?: boolean | Prisma.Plan$usersArgs<ExtArgs>
+  _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["plan"]>
 
 export type PlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -452,10 +563,18 @@ export type PlanSelectScalar = {
 }
 
 export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "plantype" | "maxProjects" | "maxFeatures" | "maxDocuments" | "price", ExtArgs["result"]["plan"]>
+export type PlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  users?: boolean | Prisma.Plan$usersArgs<ExtArgs>
+  _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type PlanIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type PlanIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Plan"
-  objects: {}
+  objects: {
+    users: Prisma.$UserPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     plantype: $Enums.PlanType
@@ -857,6 +976,7 @@ readonly fields: PlanFieldRefs;
  */
 export interface Prisma__PlanClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  users<T extends Prisma.Plan$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -909,6 +1029,10 @@ export type PlanFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.PlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
+  /**
    * Filter, which Plan to fetch.
    */
   where: Prisma.PlanWhereUniqueInput
@@ -927,6 +1051,10 @@ export type PlanFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.PlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
+  /**
    * Filter, which Plan to fetch.
    */
   where: Prisma.PlanWhereUniqueInput
@@ -944,6 +1072,10 @@ export type PlanFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Plan
    */
   omit?: Prisma.PlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
   /**
    * Filter, which Plan to fetch.
    */
@@ -993,6 +1125,10 @@ export type PlanFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.PlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
+  /**
    * Filter, which Plan to fetch.
    */
   where?: Prisma.PlanWhereInput
@@ -1041,6 +1177,10 @@ export type PlanFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.PlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
+  /**
    * Filter, which Plans to fetch.
    */
   where?: Prisma.PlanWhereInput
@@ -1083,6 +1223,10 @@ export type PlanCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the Plan
    */
   omit?: Prisma.PlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
   /**
    * The data needed to create a Plan.
    */
@@ -1131,6 +1275,10 @@ export type PlanUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the Plan
    */
   omit?: Prisma.PlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
   /**
    * The data needed to update a Plan.
    */
@@ -1198,6 +1346,10 @@ export type PlanUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.PlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
+  /**
    * The filter to search for the Plan to update in case it exists.
    */
   where: Prisma.PlanWhereUniqueInput
@@ -1224,6 +1376,10 @@ export type PlanDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.PlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
+  /**
    * Filter which Plan to delete.
    */
   where: Prisma.PlanWhereUniqueInput
@@ -1244,6 +1400,30 @@ export type PlanDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * Plan.users
+ */
+export type Plan$usersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
+  cursor?: Prisma.UserWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
+}
+
+/**
  * Plan without action
  */
 export type PlanDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1255,4 +1435,8 @@ export type PlanDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    * Omit specific fields from the Plan
    */
   omit?: Prisma.PlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
 }

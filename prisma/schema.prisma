@@ -28,11 +28,12 @@ enum PlanType {
 
 model Plan {
   id            String   @id @default(uuid())
-  plantype      PlanType @default(FREE)
+  plantype      PlanType @default(FREE) @unique
   maxProjects   Int      @default(5)
   maxFeatures   Int      @default(15)
   maxDocuments  Int      @default(5)
   price         Float    @default(0)
+  users         User[]
 }
 
 model User {
@@ -47,6 +48,8 @@ model User {
   accounts      Account[]
   projects      Project[]
   tasks         Task[]
+  plan          Plan?      @relation(fields: [planId], references: [id]) 
+  planId        String   
   role          Role @default(USER)
 
   @@unique([email])

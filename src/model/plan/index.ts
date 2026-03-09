@@ -9,10 +9,21 @@ export class PlanModel {
   }
 
   async getPlans() {
-    return await this.planRepository.getPlans();
+    const plans = await this.planRepository.getPlans();
+    if (plans.length === 0) {
+      return [await this.planRepository.createPlan({})];
+    }
+
+    return plans;
   }
 
   async createPlan(planData: PlanUncheckedCreateInput) {
+    const currentPlans = await this.planRepository.getPlanTypes();
+
+    if (currentPlans.find((plan) => plan.plantype === planData.plantype)) {
+      throw Error("Plan Already Exists");
+    }
+
     return await this.planRepository.createPlan(planData);
   }
 }
