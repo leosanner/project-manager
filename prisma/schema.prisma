@@ -49,7 +49,7 @@ model User {
   projects      Project[]
   tasks         Task[]
   plan          Plan?      @relation(fields: [planId], references: [id]) 
-  planId        String   
+  planId        String?   
   role          Role @default(USER)
 
   @@unique([email])

@@ -251,16 +251,16 @@ export type PlanOrderByWithRelationInput = {
 
 export type PlanWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  plantype?: $Enums.PlanType
   AND?: Prisma.PlanWhereInput | Prisma.PlanWhereInput[]
   OR?: Prisma.PlanWhereInput[]
   NOT?: Prisma.PlanWhereInput | Prisma.PlanWhereInput[]
-  plantype?: Prisma.EnumPlanTypeFilter<"Plan"> | $Enums.PlanType
   maxProjects?: Prisma.IntFilter<"Plan"> | number
   maxFeatures?: Prisma.IntFilter<"Plan"> | number
   maxDocuments?: Prisma.IntFilter<"Plan"> | number
   price?: Prisma.FloatFilter<"Plan"> | number
   users?: Prisma.UserListRelationFilter
-}, "id">
+}, "id" | "plantype">
 
 export type PlanOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
