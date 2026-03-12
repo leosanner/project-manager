@@ -36,11 +36,15 @@ export async function createPlanAction(
         },
       };
     }
-  } catch {
+  } catch (err) {
+    let errMessage = ["Internal server error creating plan"];
+    if (err instanceof Error) {
+      errMessage = [err.message];
+    }
     return {
       success: false,
       errors: {
-        internalServerError: ["Internal server error creating plan"],
+        internalServerError: errMessage,
       },
     };
   }
