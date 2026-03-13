@@ -9,6 +9,17 @@ export class UserRepository {
     return user;
   }
 
+  async setUserPlan(userId: string, planId: string) {
+    return await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        planId: planId,
+      },
+    });
+  }
+
   async getUsers() {
     return await prisma.user.findMany();
   }

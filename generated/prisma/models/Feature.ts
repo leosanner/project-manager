@@ -478,14 +478,6 @@ export type FeatureUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.FeatureScalarWhereInput | Prisma.FeatureScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type FeatureCreateNestedOneWithoutTasksInput = {
   create?: Prisma.XOR<Prisma.FeatureCreateWithoutTasksInput, Prisma.FeatureUncheckedCreateWithoutTasksInput>
   connectOrCreate?: Prisma.FeatureCreateOrConnectWithoutTasksInput
